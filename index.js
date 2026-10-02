@@ -1,12 +1,14 @@
 //imports
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
+const {append} = require('express/lib/response');
+const requestLogger = require('./middlewares/requestLogger');
 
 //neue Instanz von express erstellen
 const server = express();
 
 //statische Dateien
-server.use(express.static('public'));
+server.use(express.static('./public'));
 
 //Middlewares
 server.use(express.urlencoded({ extended: true }));
@@ -18,8 +20,11 @@ server.set('layout', './layouts/main');
 server.set('view engine', 'ejs');
 
 server.get('/', (req, res) => {
-  res.send('Hello World');
+  res.render("index", {layout: "./layouts/main"});
 });
+
+const projectRoutes = require('./routes/project');
+server.use('/project', projectRoutes);
 
 server.listen(3000, () => {
   console.log('Server is running on port 3000');
