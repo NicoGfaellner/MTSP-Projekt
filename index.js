@@ -5,6 +5,13 @@ const expressLayouts = require('express-ejs-layouts');
 //neue Instanz von express erstellen
 const server = express();
 
+//statische Dateien
+server.use(express.static('public'));
+
+//Middlewares
+server.use(express.urlencoded({ extended: true }));
+server.use(requestLogger);
+
 //Template Engine EJS
 server.use(expressLayouts);
 server.set('layout', './layouts/main');
