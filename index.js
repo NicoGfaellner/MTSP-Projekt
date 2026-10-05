@@ -23,9 +23,6 @@ server.get('/', (req, res) => {
   res.render("index", {layout: "./layouts/main"});
 });
 
-const projectRoutes = require('./routes/project');
-server.use('/project', projectRoutes);
-
 server.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
