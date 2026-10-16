@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/a235dda6-9f72-48fe-8e48-dc4d1e385abc/resourceGroups/WatchDeck/providers/Microsoft.Web/sites/WatchDeck",
+    "appService.deploySubpath": "."
+}
