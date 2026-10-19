@@ -23,6 +23,30 @@ server.get('/', (req, res) => {
   res.render("index", {layout: "./layouts/main"});
 });
 
+server.get('/index', (req, res) => {
+  res.render("index", {layout: "./layouts/main"});
+});
+
+server.get('/about', (req, res) => {
+  res.render("about", {layout: "./layouts/main"});
+});
+
+server.get('/contact', (req, res) => {
+  res.render("contact", {layout: "./layouts/main"});
+});
+
+server.get('/help', (req, res) => {
+  res.render("help", {layout: "./layouts/main"});
+});
+
+server.get('/privacy_policy', (req, res) => {
+  res.render("privacy_policy", {layout: "./layouts/main"});
+});
+
+server.get('/impressum', (req, res) => {
+  res.render("impressum", {layout: "./layouts/main"});
+});
+
 server.get('/help', (req, res) => {
   res.render('help', { layout: './layouts/main', submitted: false });
 });
