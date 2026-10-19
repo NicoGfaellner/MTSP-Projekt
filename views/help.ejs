@@ -1,0 +1,37 @@
+<section class="help-page container py-5">
+	<div class="help-form mx-auto">
+		<h1 class="mb-2">Wie können wir helfen?</h1>
+		<p class="text-secondary mb-4">Schick uns dein Anliegen über das Formular.</p>
+
+		<% if (submitted) { %>
+			<div class="alert alert-success" role="status">
+				Formular wurde übermittelt. In dieser Demo wird keine E-Mail versendet und die Anfrage nicht gespeichert.
+			</div>
+		<% } %>
+
+		<form action="/help" method="post">
+			<div class="row g-3 mb-3">
+				<div class="col-md-6">
+					<label for="firstName" class="form-label">Vorname</label>
+					<input type="text" class="form-control" id="firstName" name="firstName" autocomplete="given-name" required>
+				</div>
+				<div class="col-md-6">
+					<label for="lastName" class="form-label">Nachname</label>
+					<input type="text" class="form-control" id="lastName" name="lastName" autocomplete="family-name" required>
+				</div>
+			</div>
+
+			<div class="mb-3">
+				<label for="email" class="form-label">E-Mail-Adresse</label>
+				<input type="email" class="form-control" id="email" name="email" autocomplete="email" required>
+			</div>
+
+			<div class="mb-4">
+				<label for="message" class="form-label">Dein Anliegen</label>
+				<textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Anliegen senden</button>
+		</form>
+	</div>
+</section>

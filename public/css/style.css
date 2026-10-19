@@ -5,3 +5,18 @@ body{
 a{
     color: white;
 }
+.help-form{
+    max-width: 680px;
+    padding: 2rem;
+    background-color: #171717;
+    border: 1px solid #343434;
+    border-radius: 8px;
+}
+.help-form .form-label{
+    color: white;
+}
+@media (max-width: 576px){
+    .help-form{
+        padding: 1.25rem;
+    }
+}

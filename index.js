@@ -23,6 +23,14 @@ server.get('/', (req, res) => {
   res.render("index", {layout: "./layouts/main"});
 });
 
+server.get('/help', (req, res) => {
+  res.render('help', { layout: './layouts/main', submitted: false });
+});
+
+server.post('/help', (req, res) => {
+  res.render('help', { layout: './layouts/main', submitted: true });
+});
+
 const port = process.env.PORT || 3000;
 
 server.listen(port, () => {
