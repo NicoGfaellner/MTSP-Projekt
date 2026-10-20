@@ -35,10 +35,6 @@ server.get('/contact', (req, res) => {
   res.render("contact", {layout: "./layouts/main"});
 });
 
-server.get('/help', (req, res) => {
-  res.render("help", {layout: "./layouts/main"});
-});
-
 server.get('/privacy_policy', (req, res) => {
   res.render("privacy_policy", {layout: "./layouts/main"});
 });
