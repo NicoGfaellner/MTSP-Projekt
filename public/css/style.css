@@ -5,6 +5,17 @@ body{
 a{
     color: white;
 }
+.contact-cards{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.contact-cards .card{
+    width: 320px;
+    max-width: 100%;
+}
 .help-form{
     max-width: 680px;
     padding: 2rem;
