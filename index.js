@@ -43,6 +43,14 @@ server.get('/impressum', (req, res) => {
   res.render("impressum", {layout: "./layouts/main"});
 });
 
+server.get('/movies', (req, res) => {
+  res.render("movies", {layout: "./layouts/main"});
+});
+
+server.get('/tvshows', (req, res) => {
+  res.render("tvshows", {layout: "./layouts/main"});
+});
+
 server.get('/help', (req, res) => {
   res.render('help', { layout: './layouts/main', submitted: false });
 });
