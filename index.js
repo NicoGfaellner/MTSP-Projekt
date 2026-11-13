@@ -1,11 +1,12 @@
 //imports
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
-const {append} = require('express/lib/response');
 const requestLogger = require('./middlewares/requestLogger');
+require('dotenv').config({ path: './api.env' });
 
 //neue Instanz von express erstellen
 const server = express();
+const apiKey = process.env.TMDB_API_KEY;
 
 //statische Dateien
 server.use(express.static('./public'));
@@ -18,6 +19,11 @@ server.use(requestLogger);
 server.use(expressLayouts);
 server.set('layout', './layouts/main');
 server.set('view engine', 'ejs');
+
+server.get('/test-api', async (req, res) => {
+  console.log(apiKey);
+  res.send('API-Key geladen');
+});
 
 server.get('/', (req, res) => {
   res.render("index", {layout: "./layouts/main"});
@@ -64,3 +70,4 @@ const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
