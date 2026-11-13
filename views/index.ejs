@@ -1,3 +1,101 @@
-<h1>WatchDeck <%= locals.text %></h1>
+<div class="watchdeck-home">
+  <div class="container py-4 py-lg-5">
+    <section class="home-intro text-center mx-auto">
+      <span class="home-eyebrow">FILME UND SERIEN AN EINEM ORT</span>
+      <h1 class="display-5 fw-bold mt-3">Was möchtest du heute <span>schauen?</span></h1>
+      <p class="home-lead mt-3">Finde heraus, wo deine Lieblingsfilme und Serien laufen.</p>
 
-<p>kurzer Test obs funktioniert</p>
+      <form class="home-search mx-auto mt-4" action="/movies" method="get" role="search">
+        <label class="visually-hidden" for="homeSearch">Filme oder Serien suchen</label>
+        <input id="homeSearch" class="form-control" type="search" name="q" placeholder="Filme, Serien oder Schauspieler suchen...">
+        <button class="btn home-search-button" type="submit" aria-label="Suchen">⌕</button>
+      </form>
+
+      <div class="provider-filters d-flex flex-wrap justify-content-center gap-2 mt-4">
+        <a class="provider-filter" href="/movies"><span class="provider-dot netflix-dot">N</span> Netflix</a>
+        <a class="provider-filter" href="/movies"><span class="provider-dot disney-dot">D+</span> Disney+</a>
+        <a class="provider-filter" href="/movies"><span class="provider-dot prime-dot">p</span> Prime Video</a>
+        <a class="provider-filter" href="/movies"><span class="provider-dot apple-dot">tv+</span> Apple TV+</a>
+      </div>
+    </section>
+
+    <section class="feature-banner mt-5">
+      <div class="feature-copy">
+        <span class="feature-label">WATCHDECK EMPFIEHLT</span>
+        <h2 class="mt-3">Dein nächster<br>Filmabend wartet.</h2>
+        <p>Entdecke spannende Filme und Serien bei deinen Streamingdiensten.</p>
+        <a class="btn feature-button" href="/movies">Filme entdecken <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="feature-art" aria-label="Filmabend-Empfehlungen" role="img">
+        <div class="art-orb"></div>
+        <div class="art-poster art-poster-back"><span>NEUE<br>WELTEN</span></div>
+        <div class="art-poster art-poster-front"><span>FILM<br>ABEND</span></div>
+        <span class="art-spark art-spark-one">✦</span>
+        <span class="art-spark art-spark-two">✦</span>
+      </div>
+    </section>
+
+    <section class="watchlist-section mt-5">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-3">
+        <div>
+          <span class="section-eyebrow">DEIN ÜBERBLICK</span>
+          <h2 class="section-title mt-1 mb-0">Deine Watchlists</h2>
+        </div>
+        <div class="watchlist-tabs nav nav-pills" aria-label="Watchlists">
+          <a class="nav-link active" href="/movies">Demnächst schauen</a>
+          <a class="nav-link" href="/movies">Favoriten</a>
+          <a class="nav-link" href="/movies">Bereits gesehen</a>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-6 col-md-4 col-lg">
+          <article class="movie-card">
+            <div class="movie-poster poster-dune"><span class="poster-kicker">EINE NEUE REISE</span><strong>DUNE</strong><small>PART TWO</small></div>
+            <div class="movie-info"><h3>Dune: Part Two</h3><span>2024 · Science-Fiction</span><div class="service-tag"><span class="provider-dot prime-dot">p</span> Prime Video</div></div>
+          </article>
+        </div>
+        <div class="col-6 col-md-4 col-lg">
+          <article class="movie-card">
+            <div class="movie-poster poster-shogun"><span class="poster-kicker">EIN REICH IM WANDEL</span><strong>SHŌGUN</strong><small>DISNEY+</small></div>
+            <div class="movie-info"><h3>Shōgun</h3><span>2024 · Drama</span><div class="service-tag"><span class="provider-dot disney-dot">D+</span> Disney+</div></div>
+          </article>
+        </div>
+        <div class="col-6 col-md-4 col-lg">
+          <article class="movie-card">
+            <div class="movie-poster poster-wednesday"><span class="poster-kicker">EIN BISSCHEN ANDERS</span><strong>WEDNESDAY</strong><small>NETFLIX</small></div>
+            <div class="movie-info"><h3>Wednesday</h3><span>2022 · Mystery</span><div class="service-tag"><span class="provider-dot netflix-dot">N</span> Netflix</div></div>
+          </article>
+        </div>
+        <div class="col-6 col-md-4 col-lg">
+          <article class="movie-card">
+            <div class="movie-poster poster-bear"><span class="poster-kicker">KÜCHE MIT HERZ</span><strong>THE<br>BEAR</strong><small>FX SERIES</small></div>
+            <div class="movie-info"><h3>The Bear</h3><span>2022 · Comedy-Drama</span><div class="service-tag"><span class="provider-dot disney-dot">D+</span> Disney+</div></div>
+          </article>
+        </div>
+        <div class="col-6 col-md-4 col-lg">
+          <article class="movie-card">
+            <div class="movie-poster poster-fallout"><span class="poster-kicker">DIE WELT DANACH</span><strong>FALLOUT</strong><small>AMAZON ORIGINAL</small></div>
+            <div class="movie-info"><h3>Fallout</h3><span>2024 · Abenteuer</span><div class="service-tag"><span class="provider-dot prime-dot">p</span> Prime Video</div></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="discover-panel mt-5 p-4 p-md-5">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <span class="section-eyebrow">ALLES IM BLICK</span>
+          <h2 class="section-title mt-2">Noch auf der Suche?</h2>
+          <p class="mb-0">Stöbere durch Filme und Serien und finde etwas für deinen nächsten Abend.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a class="btn discover-button me-2 mb-2 mb-sm-0" href="/movies">Filme ansehen</a>
+          <a class="btn discover-button-outline" href="/tvshows">Serien ansehen</a>
+        </div>
+      </div>
+    </section>
+
+    <p class="storage-note text-center mt-4 mb-0">Deine Watchlist wird lokal in deinem Browser gespeichert.</p>
+  </div>
+</div>
