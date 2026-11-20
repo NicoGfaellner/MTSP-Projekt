@@ -247,6 +247,31 @@ main{
     color: var(--muted-color);
     font-size: .9rem;
 }
+.provider-logo{
+    display: inline-block;
+    width: 30px;
+    height: 24px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+.netflix-logo{
+    width: 18px;
+}
+.disney-logo{
+    width: 36px;
+    padding: 2px;
+    background-color: #ffffff;
+    border-radius: 2px;
+}
+.prime-logo{
+    width: 42px;
+    padding: 2px;
+    background-color: #ffffff;
+    border-radius: 2px;
+}
+.apple-logo{
+    width: 25px;
+}
 .provider-dot{
     display: inline-flex;
     width: 22px;
