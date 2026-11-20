@@ -12,6 +12,8 @@
 }
 
 body{
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
     color: var(--text-color);
     background-color: var(--page-bg);
@@ -119,6 +121,7 @@ button:focus-visible,
 }
 
 main{
+    flex: 1;
     min-height: 60vh;
 }
 .content-page{
@@ -243,6 +246,28 @@ main{
     gap: .4rem;
     color: var(--muted-color);
     font-size: .9rem;
+}
+.provider-logo{
+    display: inline-block;
+    width: 30px;
+    height: 24px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+.netflix-logo{
+    width: 18px;
+}
+.disney-logo{
+    width: 36px;
+    padding: 2px;
+    filter: brightness(0) invert(1);
+}
+.prime-logo{
+    width: 42px;
+    filter: brightness(0) invert(1);
+}
+.apple-logo{
+    width: 25px;
 }
 .provider-dot{
     display: inline-flex;
