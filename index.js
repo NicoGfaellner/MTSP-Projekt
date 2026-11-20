@@ -3,6 +3,7 @@ const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const requestLogger = require('./middlewares/requestLogger');
 const moviesRouter = require('./routes/movies');
+const tvShowsRouter = require('./routes/tvshows');
 require('dotenv').config({ path: './api.env' });
 
 //neue Instanz von express erstellen
@@ -54,9 +55,7 @@ server.get('/impressum', (req, res) => {
 
 server.use('/movies', moviesRouter);
 
-server.get('/tvshows', (req, res) => {
-  res.render("tvshows", {layout: "./layouts/main"});
-});
+server.use('/tvshows', tvShowsRouter);
 
 server.get('/help', (req, res) => {
   res.render('help', { layout: './layouts/main', submitted: false });

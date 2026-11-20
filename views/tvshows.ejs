@@ -4,9 +4,42 @@
     <p>Unsere Übersicht über Serien und ihre Streaming-Anbieter.</p>
   </div>
 
-  <div class="content-panel text-center py-5">
-    <h2 class="h4">Hier wird noch gearbeitet</h2>
-    <p class="empty-state-copy mx-auto mt-2">Die Serienliste ist noch nicht fertig. Auf der Startseite findest du bisher ein paar Beispieltitel.</p>
-    <a class="btn feature-button mt-3" href="/">Zur Startseite <span aria-hidden="true">→</span></a>
-  </div>
+  <% if (tvShows.length > 0) { %>
+    <div class="row row-cols-3 g-2 g-md-4">
+      <% for (const tvShow of tvShows) { %>
+        <div class="col">
+          <article class="movie-card">
+            <% if (tvShow.poster_path) { %>
+              <img class="d-block w-100 rounded"
+                   src="https://image.tmdb.org/t/p/w500<%= tvShow.poster_path %>"
+                   alt="Poster zu <%= tvShow.name %>"
+                   loading="lazy"
+                   style="aspect-ratio: 2 / 3; object-fit: cover;">
+            <% } %>
+
+            <div class="movie-info text-break">
+              <h2 class="h6 mb-1"><%= tvShow.name %></h2>
+              <span>
+                <%= tvShow.first_air_date?.slice(0, 4) || 'Jahr offen' %>
+                <% if (tvShow.episode_run_time?.[0]) { %> · <%= tvShow.episode_run_time[0] %> Min. pro Folge<% } %>
+              </span>
+
+              <% if (tvShow.genres?.length) { %>
+                <p class="small mt-1 mb-1"><%= tvShow.genres.map(genre => genre.name).join(', ') %></p>
+              <% } %>
+
+              <% if (tvShow.overview) { %>
+                <details class="small mt-1">
+                  <summary>Inhalt</summary>
+                  <p class="mt-1 mb-0"><%= tvShow.overview %></p>
+                </details>
+              <% } %>
+            </div>
+          </article>
+        </div>
+      <% } %>
+    </div>
+  <% } else { %>
+    <p class="content-panel">Beim Laden der Seriendaten ist ein Fehler aufgetreten.</p>
+  <% } %>
 </section>
