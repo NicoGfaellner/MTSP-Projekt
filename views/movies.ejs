@@ -4,9 +4,42 @@
     <p>Unsere Übersicht über Filme und ihre Streaming-Anbieter.</p>
   </div>
 
-  <div class="content-panel text-center py-5">
-    <h2 class="h4">Hier wird noch gearbeitet</h2>
-    <p class="empty-state-copy mx-auto mt-2">Die Filmliste ist noch nicht fertig. Auf der Startseite findest du bisher ein paar Beispieltitel.</p>
-    <a class="btn feature-button mt-3" href="/">Zur Startseite <span aria-hidden="true">→</span></a>
-  </div>
+  <% if (movies.length > 0) { %>
+    <div class="row row-cols-3 g-2 g-md-4">
+      <% for (const movie of movies) { %>
+        <div class="col">
+          <article class="movie-card">
+            <% if (movie.poster_path) { %>
+              <img class="d-block w-100 rounded"
+                   src="https://image.tmdb.org/t/p/w500<%= movie.poster_path %>"
+                   alt="Poster zu <%= movie.title %>"
+                   loading="lazy"
+                   style="aspect-ratio: 2 / 3; object-fit: cover;">
+            <% } %>
+
+            <div class="movie-info text-break">
+              <h2 class="h6 mb-1"><%= movie.title %></h2>
+              <span>
+                <%= movie.release_date?.slice(0, 4) || 'Jahr offen' %>
+                <% if (movie.runtime) { %> · <%= movie.runtime %> Min.<% } %>
+              </span>
+
+              <% if (movie.genres?.length) { %>
+                <p class="small mt-1 mb-1"><%= movie.genres.map(genre => genre.name).join(', ') %></p>
+              <% } %>
+
+              <% if (movie.overview) { %>
+                <details class="small mt-1">
+                  <summary>Inhalt</summary>
+                  <p class="mt-1 mb-0"><%= movie.overview %></p>
+                </details>
+              <% } %>
+            </div>
+          </article>
+        </div>
+      <% } %>
+    </div>
+  <% } else { %>
+    <p class="content-panel">Beim Laden der Filmdaten ist ein Fehler aufgetreten.</p>
+  <% } %>
 </section>

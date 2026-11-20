@@ -2,11 +2,11 @@
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const requestLogger = require('./middlewares/requestLogger');
+const moviesRouter = require('./routes/movies');
 require('dotenv').config({ path: './api.env' });
 
 //neue Instanz von express erstellen
 const server = express();
-const apiKey = process.env.TMDB_API_KEY;
 
 //statische Dateien
 server.use(express.static('./public'));
@@ -20,8 +20,11 @@ server.use(expressLayouts);
 server.set('layout', './layouts/main');
 server.set('view engine', 'ejs');
 
-server.get('/test-api', async (req, res) => {
-  console.log(apiKey);
+server.get('/test-api', (req, res) => {
+  if (!process.env.TMDB_API_KEY) {
+    return res.status(500).send('TMDB_API_KEY fehlt.');
+  }
+
   res.send('API-Key geladen');
 });
 
@@ -49,9 +52,7 @@ server.get('/impressum', (req, res) => {
   res.render("impressum", {layout: "./layouts/main"});
 });
 
-server.get('/movies', (req, res) => {
-  res.render("movies", {layout: "./layouts/main"});
-});
+server.use('/movies', moviesRouter);
 
 server.get('/tvshows', (req, res) => {
   res.render("tvshows", {layout: "./layouts/main"});
@@ -70,4 +71,3 @@ const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
