@@ -260,14 +260,11 @@ main{
 .disney-logo{
     width: 36px;
     padding: 2px;
-/*    background-color: #ffffff;*/
-    border-radius: 2px;
+    filter: brightness(0) invert(1);
 }
 .prime-logo{
     width: 42px;
-    padding: 2px;
-/*    background-color: #ffffff;*/
-    border-radius: 2px;
+    filter: brightness(0) invert(1);
 }
 .apple-logo{
     width: 25px;
