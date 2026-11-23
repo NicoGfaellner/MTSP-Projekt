@@ -1,14 +1,15 @@
 const providerCategories = ['flatrate', 'free', 'ads', 'rent', 'buy'];
-const providerUrls = new Map([
-  [8, 'https://www.netflix.com/at/'],
-  [119, 'https://www.primevideo.com/'],
-  [337, 'https://www.disneyplus.com/de-at'],
-  [350, 'https://tv.apple.com/at'],
-  [1899, 'https://www.max.com/at/de']
+const providerSearchUrls = new Map([
+  [8, title => `https://www.netflix.com/at/search?q=${encodeURIComponent(title)}`],
+  [119, title => `https://www.primevideo.com/search/ref=atv_nb_sr?phrase=${encodeURIComponent(title)}`],
+  [337, title => `https://www.disneyplus.com/de-at/search?q=${encodeURIComponent(title)}`],
+  [350, title => `https://tv.apple.com/at/search?term=${encodeURIComponent(title)}`],
+  [1899, title => `https://www.max.com/at/de/search?q=${encodeURIComponent(title)}`]
 ]);
 
-function getProviderUrl(providerId, fallbackUrl) {
-  return providerUrls.get(providerId) || fallbackUrl;
+function getProviderUrl(providerId, fallbackUrl, title) {
+  const searchUrl = providerSearchUrls.get(providerId);
+  return (searchUrl && title) ? searchUrl(title) : fallbackUrl;
 }
 
 async function fetchTitleWithProviders(type, id, apiKey) {
@@ -38,7 +39,11 @@ async function fetchTitleWithProviders(type, id, apiKey) {
       uniqueProviders.set(provider.provider_id, {
         id: provider.provider_id,
         name: provider.provider_name,
-        url: getProviderUrl(provider.provider_id, regionProviders.link),
+        url: getProviderUrl(
+          provider.provider_id,
+          regionProviders.link,
+          details.title || details.name
+        ),
         logoUrl: provider.logo_path
           ? `https://image.tmdb.org/t/p/w92${provider.logo_path}`
           : null

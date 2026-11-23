@@ -76,7 +76,11 @@ async function loadHomeContent(apiKey) {
             .map(provider => ({
               id: provider.provider_id,
               name: provider.provider_name,
-              url: getProviderUrl(provider.provider_id, providers.results?.AT?.link),
+              url: getProviderUrl(
+                provider.provider_id,
+                providers.results?.AT?.link,
+                details.title || details.name
+              ),
               logoUrl: `https://image.tmdb.org/t/p/w92${provider.logo_path}`
             }))
         }
