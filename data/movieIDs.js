@@ -30,4 +30,10 @@ module.exports = [
   11, // Star Wars (1977)
   808, // Shrek
   936075, //Michael (2026)
+  186971, // Michael Kohlhaas
+  40903, //Michel aus Lönneberga
+  573010, //Kilian
+  1555920, //Mattias
+  9395, //Nico
+  1541463, //Matias
 ];
