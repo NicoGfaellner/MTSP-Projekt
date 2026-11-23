@@ -2,7 +2,6 @@
   <section class="home-intro">
     <h1>Filme und Serien finden</h1>
     <p class="home-lead mt-3">Mit WatchDeck wollen wir Filme und Serien sammeln und zeigen, bei welchen Streaming-Anbietern sie laufen.</p>
-
     <form class="home-search mt-4" action="/movies" method="get" role="search">
       <label class="visually-hidden" for="homeSearch">Filme oder Serien suchen</label>
       <input id="homeSearch" class="form-control" type="search" name="q" placeholder="Film oder Serie suchen...">
@@ -20,39 +19,43 @@
   <section class="examples-section mt-5" aria-labelledby="examplesHeading">
     <h2 class="section-title mb-3" id="examplesHeading">Ein paar Beispiele</h2>
 
-    <div class="row g-3">
-      <div class="col-6 col-md-4 col-lg">
-        <article class="movie-card">
-          <div class="movie-poster poster-dune" aria-hidden="true"><strong>Dune: Part Two</strong></div>
-          <div class="movie-info"><h3>Dune: Part Two</h3><span>2024 · Science-Fiction</span><div class="service-tag"><img class="provider-logo prime-logo" src="/images/prime-video.svg" alt=""> Prime Video</div></div>
-        </article>
+    <% if (movies.length > 0 || tvShows.length > 0) { %>
+      <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-2 g-md-4">
+        <% for (const movie of movies) { %>
+          <div class="col">
+            <article class="movie-card">
+              <% if (movie.poster_path) { %>
+                <img class="d-block w-100 rounded" src="https://image.tmdb.org/t/p/w500<%= movie.poster_path %>" alt="Poster zu <%= movie.title %>" loading="lazy" style="aspect-ratio: 2 / 3; object-fit: cover;">
+              <% } %>
+              <div class="movie-info text-break">
+                <h3 class="h6 mb-1"><%= movie.title %></h3>
+                <span><%= movie.release_date?.slice(0, 4) || 'Jahr offen' %><% if (movie.runtime) { %> · <%= movie.runtime %> Min.<% } %></span>
+                <% if (movie.genres?.length) { %><p class="small mt-1 mb-1"><%= movie.genres.map(genre => genre.name).join(', ') %></p><% } %>
+                <% if (movie.overview) { %><details class="small mt-1"><summary>Inhalt</summary><p class="mt-1 mb-0"><%= movie.overview %></p></details><% } %>
+              </div>
+            </article>
+          </div>
+        <% } %>
+
+        <% for (const tvShow of tvShows) { %>
+          <div class="col">
+            <article class="movie-card">
+              <% if (tvShow.poster_path) { %>
+                <img class="d-block w-100 rounded" src="https://image.tmdb.org/t/p/w500<%= tvShow.poster_path %>" alt="Poster zu <%= tvShow.name %>" loading="lazy" style="aspect-ratio: 2 / 3; object-fit: cover;">
+              <% } %>
+              <div class="movie-info text-break">
+                <h3 class="h6 mb-1"><%= tvShow.name %></h3>
+                <span><%= tvShow.first_air_date?.slice(0, 4) || 'Jahr offen' %><% if (tvShow.episode_run_time?.[0]) { %> · <%= tvShow.episode_run_time[0] %> Min. pro Folge<% } %></span>
+                <% if (tvShow.genres?.length) { %><p class="small mt-1 mb-1"><%= tvShow.genres.map(genre => genre.name).join(', ') %></p><% } %>
+                <% if (tvShow.overview) { %><details class="small mt-1"><summary>Inhalt</summary><p class="mt-1 mb-0"><%= tvShow.overview %></p></details><% } %>
+              </div>
+            </article>
+          </div>
+        <% } %>
       </div>
-      <div class="col-6 col-md-4 col-lg">
-        <article class="movie-card">
-          <div class="movie-poster poster-shogun" aria-hidden="true"><strong>Shōgun</strong></div>
-          <div class="movie-info"><h3>Shōgun</h3><span>2024 · Drama</span><div class="service-tag"><img class="provider-logo disney-logo" src="/images/disney-plus.svg" alt=""> Disney+</div></div>
-        </article>
-      </div>
-      <div class="col-6 col-md-4 col-lg">
-        <article class="movie-card">
-          <div class="movie-poster poster-wednesday" aria-hidden="true"><strong>Wednesday</strong></div>
-          <div class="movie-info"><h3>Wednesday</h3><span>2022 · Mystery</span><div class="service-tag"><img class="provider-logo netflix-logo" src="/images/netflix.svg" alt=""> Netflix</div></div>
-        </article>
-      </div>
-      <div class="col-6 col-md-4 col-lg">
-        <article class="movie-card">
-          <div class="movie-poster poster-bear" aria-hidden="true"><strong>The Bear</strong></div>
-          <div class="movie-info"><h3>The Bear</h3><span>2022 · Comedy-Drama</span><div class="service-tag"><img class="provider-logo disney-logo" src="/images/disney-plus.svg" alt=""> Disney+</div></div>
-        </article>
-      </div>
-      <div class="col-6 col-md-4 col-lg">
-        <article class="movie-card">
-          <div class="movie-poster poster-fallout" aria-hidden="true"><strong>Fallout</strong></div>
-          <div class="movie-info"><h3>Fallout</h3><span>2024 · Abenteuer</span><div class="service-tag"><img class="provider-logo prime-logo" src="/images/prime-video.svg" alt=""> Prime Video</div></div>
-        </article>
-      </div>
-    </div>
-    <p class="storage-note mt-2">Das sind Beispieldaten. Suche, Anbieter-Abgleich und Watchlist sind noch in Arbeit.</p>
+    <% } else { %>
+      <p class="content-panel">Beim Laden der Film- und Seriendaten ist ein Fehler aufgetreten.</p>
+    <% } %>
   </section>
 
   <nav class="home-links mt-4 pt-4" aria-label="Film- und Serienübersicht">

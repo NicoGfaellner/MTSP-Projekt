@@ -4,6 +4,8 @@ const expressLayouts = require('express-ejs-layouts');
 const requestLogger = require('./middlewares/requestLogger');
 const moviesRouter = require('./routes/movies');
 const tvShowsRouter = require('./routes/tvshows');
+const movieIds = require('./data/movieIDs');
+const tvShowIds = require('./data/tvshowIDs');
 require('dotenv').config({ path: './api.env' });
 
 //neue Instanz von express erstellen
@@ -21,6 +23,54 @@ server.use(expressLayouts);
 server.set('layout', './layouts/main');
 server.set('view engine', 'ejs');
 
+const homeCache = { movies: [], tvShows: [], expiresAt: 0 };
+let loadingHomeContent = null;
+
+async function loadHomeContent(apiKey) {
+  const requests = [
+    ...movieIds.slice(0, 3).map(id => ({ type: 'movie', id })),
+    ...tvShowIds.slice(0, 2).map(id => ({ type: 'tv', id }))
+  ];
+
+  const results = await Promise.allSettled(requests.map(async ({ type, id }) => {
+    const url = new URL(`https://api.themoviedb.org/3/${type}/${id}`);
+    url.searchParams.set('api_key', apiKey);
+    url.searchParams.set('language', 'de-DE');
+
+    const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    if (!response.ok) {
+      throw new Error(`TMDB HTTP ${response.status} bei ${type} ${id}`);
+    }
+
+    return { type, data: await response.json() };
+  }));
+
+  homeCache.movies = results
+    .filter(result => result.status === 'fulfilled' && result.value.type === 'movie')
+    .map(result => result.value.data);
+  homeCache.tvShows = results
+    .filter(result => result.status === 'fulfilled' && result.value.type === 'tv')
+    .map(result => result.value.data);
+  homeCache.expiresAt = Date.now() + (homeCache.movies.length + homeCache.tvShows.length === requests.length ? 10 : 1) * 60_000;
+}
+
+async function renderHome(req, res) {
+  const apiKey = process.env.TMDB_API_KEY;
+
+  if (apiKey && Date.now() >= homeCache.expiresAt) {
+    loadingHomeContent ??= loadHomeContent(apiKey).finally(() => {
+      loadingHomeContent = null;
+    });
+    await loadingHomeContent;
+  }
+
+  res.render('index', {
+    layout: './layouts/main',
+    movies: homeCache.movies,
+    tvShows: homeCache.tvShows
+  });
+}
+
 server.get('/test-api', (req, res) => {
   if (!process.env.TMDB_API_KEY) {
     return res.status(500).send('TMDB_API_KEY fehlt.');
@@ -29,13 +79,9 @@ server.get('/test-api', (req, res) => {
   res.send('API-Key geladen');
 });
 
-server.get('/', (req, res) => {
-  res.render("index", {layout: "./layouts/main"});
-});
+server.get('/', renderHome);
 
-server.get('/index', (req, res) => {
-  res.render("index", {layout: "./layouts/main"});
-});
+server.get('/index', renderHome);
 
 server.get('/about', (req, res) => {
   res.render("about", {layout: "./layouts/main"});
