@@ -6,6 +6,7 @@ const moviesRouter = require('./routes/movies');
 const tvShowsRouter = require('./routes/tvshows');
 const budSpencerRouter = require('./routes/budspencer');
 const bullyHerbigRouter = require('./routes/bullyherbig');
+const asterixRouter = require('./routes/asterix');
 const movieIds = require('./data/movieIDs');
 const tvShowIds = require('./data/tvshowIDs');
 const { getProviderUrl } = require('./tmdbProviders');
@@ -167,6 +168,9 @@ server.use('/budspencer', budSpencerRouter);
 
 // Zweites, absichtlich nicht verlinktes Easter Egg.
 server.use('/bullyherbig', bullyHerbigRouter);
+
+// Weiteres, absichtlich nicht verlinktes Easter Egg.
+server.use('/asterix', asterixRouter);
 
 server.get('/help', (req, res) => {
   res.render('help', { layout: './layouts/main', submitted: false });

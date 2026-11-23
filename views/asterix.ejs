@@ -1,0 +1,59 @@
+<section class="content-page container">
+  <div class="page-heading">
+    <h1>Asterix – Das Easter Egg</h1>
+    <p>Eine kleine Sammlung der Asterix-Filme.</p>
+  </div>
+
+  <% if (movies.length > 0) { %>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4">
+      <% for (const movie of movies) { %>
+        <div class="col">
+          <article class="movie-card">
+            <% if (movie.poster_path) { %>
+              <img class="d-block w-100 rounded"
+                   src="https://image.tmdb.org/t/p/w500<%= movie.poster_path %>"
+                   alt="Poster zu <%= movie.title %>"
+                   loading="lazy"
+                   style="aspect-ratio: 2 / 3; object-fit: cover;">
+            <% } %>
+
+            <div class="movie-info text-break">
+              <h2 class="h6 mb-1"><%= movie.title %></h2>
+              <span>
+                <%= movie.release_date?.slice(0, 4) || 'Jahr offen' %>
+                <% if (movie.runtime) { %> · <%= movie.runtime %> Min.<% } %>
+              </span>
+
+              <% if (movie.streamingProviders?.length) { %>
+                <div class="service-tag" aria-label="Verfügbar bei">
+                  <% movie.streamingProviders.forEach(provider => { %>
+                    <span class="provider-service">
+                      <a href="<%= provider.url %>" target="_blank" rel="noopener noreferrer">
+                        <img class="provider-logo" src="<%= provider.logoUrl %>" alt="<%= provider.name %>" title="<%= provider.name %>">
+                      </a>
+                    </span>
+                  <% }) %>
+                </div>
+              <% } %>
+
+              <% if (movie.genres?.length) { %>
+                <p class="small mt-1 mb-1"><%= movie.genres.map(genre => genre.name).join(', ') %></p>
+              <% } %>
+
+              <% if (movie.overview) { %>
+                <details class="small mt-1">
+                  <summary>Inhalt</summary>
+                  <p class="mt-1 mb-0"><%= movie.overview %></p>
+                </details>
+              <% } %>
+            </div>
+          </article>
+        </div>
+      <% } %>
+    </div>
+  <% } else if (loadError) { %>
+    <p class="content-panel">Die Asterix-Filme konnten gerade nicht geladen werden.</p>
+  <% } else { %>
+    <p class="content-panel">Das Easter Egg ist bereit. Trage die TMDB-IDs der Asterix-Filme in <code>data/asterixMovieIDs.js</code> ein.</p>
+  <% } %>
+</section>
