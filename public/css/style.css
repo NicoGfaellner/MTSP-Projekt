@@ -25,6 +25,11 @@ a{
 a:hover{
     color: var(--link-hover);
 }
+.impressum-easter-egg,
+.impressum-easter-egg:hover{
+    color: inherit;
+    text-decoration: none;
+}
 a:focus-visible,
 button:focus-visible,
 .btn:focus-visible{
