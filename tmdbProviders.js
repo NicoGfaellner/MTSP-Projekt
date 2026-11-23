@@ -1,15 +1,24 @@
 const providerCategories = ['flatrate', 'free', 'ads', 'rent', 'buy'];
 const providerSearchUrls = new Map([
-  [8, title => `https://www.netflix.com/at/search?q=${encodeURIComponent(title)}`],
-  [119, title => `https://www.primevideo.com/search/ref=atv_nb_sr?phrase=${encodeURIComponent(title)}`],
+  // Netflix nutzt keine Titel-Slugs unter /at/, sondern eine Suchroute.
+  [8, title => `https://www.netflix.com/search?q=${encodeURIComponent(title)}`],
+  [9, title => `https://www.primevideo.com/search?phrase=${encodeURIComponent(title)}`],
+  [10, title => `https://www.primevideo.com/search?phrase=${encodeURIComponent(title)}`],
+  [613, title => `https://www.primevideo.com/search?phrase=${encodeURIComponent(title)}`],
+  [2100, title => `https://www.primevideo.com/search?phrase=${encodeURIComponent(title)}`],
+  [1825, title => `https://www.primevideo.com/search?phrase=${encodeURIComponent(title)}`],
+  [2578, title => `https://www.primevideo.com/search?phrase=${encodeURIComponent(title)}`],
   [337, title => `https://www.disneyplus.com/de-at/search?q=${encodeURIComponent(title)}`],
-  [350, title => `https://tv.apple.com/at/search?term=${encodeURIComponent(title)}`],
-  [1899, title => `https://www.max.com/at/de/search?q=${encodeURIComponent(title)}`]
+  [2, title => `https://tv.apple.com/at/search?term=${encodeURIComponent(title)}`]
 ]);
 
 function getProviderUrl(providerId, fallbackUrl, title) {
   const searchUrl = providerSearchUrls.get(providerId);
-  return (searchUrl && title) ? searchUrl(title) : fallbackUrl;
+  if (searchUrl && title) return searchUrl(title);
+
+  // TMDB liefert für die übrigen Anbieter keine eigene Titel-URL, sondern
+  // einen Link zur Verfügbarkeitsseite dieses konkreten Films bzw. dieser Serie.
+  return fallbackUrl || `https://www.themoviedb.org/search?query=${encodeURIComponent(title || '')}`;
 }
 
 async function fetchTitleWithProviders(type, id, apiKey) {
