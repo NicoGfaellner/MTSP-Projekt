@@ -5,6 +5,7 @@ const requestLogger = require('./middlewares/requestLogger');
 const moviesRouter = require('./routes/movies');
 const tvShowsRouter = require('./routes/tvshows');
 const budSpencerRouter = require('./routes/budspencer');
+const bullyHerbigRouter = require('./routes/bullyherbig');
 const movieIds = require('./data/movieIDs');
 const tvShowIds = require('./data/tvshowIDs');
 const { getProviderUrl } = require('./tmdbProviders');
@@ -163,6 +164,9 @@ server.use('/tvshows', tvShowsRouter);
 
 // Absichtlich nicht in der Navigation verlinkt: verstecktes Easter Egg.
 server.use('/budspencer', budSpencerRouter);
+
+// Zweites, absichtlich nicht verlinktes Easter Egg.
+server.use('/bullyherbig', bullyHerbigRouter);
 
 server.get('/help', (req, res) => {
   res.render('help', { layout: './layouts/main', submitted: false });
