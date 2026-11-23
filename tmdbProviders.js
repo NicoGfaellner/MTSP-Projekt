@@ -1,4 +1,15 @@
 const providerCategories = ['flatrate', 'free', 'ads', 'rent', 'buy'];
+const providerUrls = new Map([
+  [8, 'https://www.netflix.com/at/'],
+  [119, 'https://www.primevideo.com/'],
+  [337, 'https://www.disneyplus.com/de-at'],
+  [350, 'https://tv.apple.com/at'],
+  [1899, 'https://www.max.com/at/de']
+]);
+
+function getProviderUrl(providerId, fallbackUrl) {
+  return providerUrls.get(providerId) || fallbackUrl;
+}
 
 async function fetchTitleWithProviders(type, id, apiKey) {
   const detailsUrl = new URL(`https://api.themoviedb.org/3/${type}/${id}`);
@@ -27,6 +38,7 @@ async function fetchTitleWithProviders(type, id, apiKey) {
       uniqueProviders.set(provider.provider_id, {
         id: provider.provider_id,
         name: provider.provider_name,
+        url: getProviderUrl(provider.provider_id, regionProviders.link),
         logoUrl: provider.logo_path
           ? `https://image.tmdb.org/t/p/w92${provider.logo_path}`
           : null
@@ -41,4 +53,4 @@ async function fetchTitleWithProviders(type, id, apiKey) {
   };
 }
 
-module.exports = { fetchTitleWithProviders };
+module.exports = { fetchTitleWithProviders, getProviderUrl };

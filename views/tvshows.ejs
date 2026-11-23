@@ -28,7 +28,9 @@
                 <div class="service-tag" aria-label="Verfügbar bei">
                   <% tvShow.streamingProviders.forEach(provider => { %>
                     <span class="provider-service">
-                      <img class="provider-logo" src="<%= provider.logoUrl %>" alt="<%= provider.name %>" title="<%= provider.name %>">
+                      <a href="<%= provider.url %>" target="_blank" rel="noopener noreferrer">
+                        <img class="provider-logo" src="<%= provider.logoUrl %>" alt="<%= provider.name %>" title="<%= provider.name %>">
+                      </a>
                     </span>
                   <% }) %>
                 </div>

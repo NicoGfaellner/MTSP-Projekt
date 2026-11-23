@@ -6,6 +6,7 @@ const moviesRouter = require('./routes/movies');
 const tvShowsRouter = require('./routes/tvshows');
 const movieIds = require('./data/movieIDs');
 const tvShowIds = require('./data/tvshowIDs');
+const { getProviderUrl } = require('./tmdbProviders');
 require('dotenv').config({ path: './api.env' });
 
 //neue Instanz von express erstellen
@@ -75,6 +76,7 @@ async function loadHomeContent(apiKey) {
             .map(provider => ({
               id: provider.provider_id,
               name: provider.provider_name,
+              url: getProviderUrl(provider.provider_id, providers.results?.AT?.link),
               logoUrl: `https://image.tmdb.org/t/p/w92${provider.logo_path}`
             }))
         }
