@@ -4,6 +4,7 @@ const expressLayouts = require('express-ejs-layouts');
 const requestLogger = require('./middlewares/requestLogger');
 const moviesRouter = require('./routes/movies');
 const tvShowsRouter = require('./routes/tvshows');
+const budSpencerRouter = require('./routes/budspencer');
 const movieIds = require('./data/movieIDs');
 const tvShowIds = require('./data/tvshowIDs');
 const { getProviderUrl } = require('./tmdbProviders');
@@ -159,6 +160,9 @@ server.get('/impressum', (req, res) => {
 server.use('/movies', moviesRouter);
 
 server.use('/tvshows', tvShowsRouter);
+
+// Absichtlich nicht in der Navigation verlinkt: verstecktes Easter Egg.
+server.use('/budspencer', budSpencerRouter);
 
 server.get('/help', (req, res) => {
   res.render('help', { layout: './layouts/main', submitted: false });
