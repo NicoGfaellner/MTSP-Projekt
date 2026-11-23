@@ -1,4 +1,5 @@
 module.exports = [
+  40903, //Michel aus Lönneberga 
   1396, // Breaking Bad
   1399, // Game of Thrones
   66732, // Stranger Things
@@ -23,7 +24,6 @@ module.exports = [
   71912, // The Witcher
   87739, // The Queen's Gambit
   87108, // Chernobyl
-  85552, // Euphoria
   456, // The Simpsons
   1668, // Friends
   1434, // Family Guy
