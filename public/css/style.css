@@ -347,7 +347,7 @@ main{
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: .4rem;
+    gap: .5rem;
     margin-left: .5rem;
     vertical-align: middle;
     color: #cccccc;
@@ -356,7 +356,13 @@ main{
 .provider-service{
     display: inline-flex;
     align-items: center;
-    gap: .25rem;
+    justify-content: center;
+    width: 34px;
+    height: 30px;
+    padding: .15rem;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, .04);
 }
 .provider-service .provider-logo{
     width: 24px;

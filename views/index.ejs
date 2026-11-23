@@ -9,10 +9,10 @@
     </form>
 
     <ul class="d-flex flex-wrap gap-3 list-unstyled mt-3 mb-0" aria-label="Beispiele für Streaming-Anbieter">
-      <li class="provider-label"><img class="provider-logo netflix-logo" src="/images/netflix.svg" alt=""> Netflix</li>
-      <li class="provider-label"><img class="provider-logo disney-logo" src="/images/disney-plus.svg" alt=""> Disney+</li>
-      <li class="provider-label"><img class="provider-logo prime-logo" src="/images/prime-video.svg" alt=""> Prime Video</li>
-      <li class="provider-label"><img class="provider-logo apple-logo" src="/images/apple-tv.svg" alt=""> Apple TV+</li>
+      <li class="provider-label"><img class="provider-logo netflix-logo" src="/images/netflix.svg" alt="Netflix" title="Netflix"></li>
+      <li class="provider-label"><img class="provider-logo disney-logo" src="/images/disney-plus.svg" alt="Disney+" title="Disney+"></li>
+      <li class="provider-label"><img class="provider-logo prime-logo" src="/images/prime-video.svg" alt="Prime Video" title="Prime Video"></li>
+      <li class="provider-label"><img class="provider-logo apple-logo" src="/images/apple-tv.svg" alt="Apple TV+" title="Apple TV+"></li>
     </ul>
   </section>
 
@@ -35,7 +35,6 @@
                     <% movie.streamingProviders.forEach(provider => { %>
                       <span class="provider-service">
                         <img class="provider-logo" src="<%= provider.logoUrl %>" alt="<%= provider.name %>" title="<%= provider.name %>">
-                        <span><%= provider.name %></span>
                       </span>
                     <% }) %>
                   </div>
@@ -61,7 +60,6 @@
                     <% tvShow.streamingProviders.forEach(provider => { %>
                       <span class="provider-service">
                         <img class="provider-logo" src="<%= provider.logoUrl %>" alt="<%= provider.name %>" title="<%= provider.name %>">
-                        <span><%= provider.name %></span>
                       </span>
                     <% }) %>
                   </div>
