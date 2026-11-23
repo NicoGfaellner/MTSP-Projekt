@@ -32,26 +32,67 @@ async function loadHomeContent(apiKey) {
     ...tvShowIds.slice(0, 2).map(id => ({ type: 'tv', id }))
   ];
 
-  const results = await Promise.allSettled(requests.map(async ({ type, id }) => {
-    const url = new URL(`https://api.themoviedb.org/3/${type}/${id}`);
-    url.searchParams.set('api_key', apiKey);
-    url.searchParams.set('language', 'de-DE');
+  const results = await Promise.allSettled(
+    requests.map(async ({ type, id }) => {
+      const detailsUrl = new URL(
+        `https://api.themoviedb.org/3/${type}/${id}`
+      );
 
-    const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
-    if (!response.ok) {
-      throw new Error(`TMDB HTTP ${response.status} bei ${type} ${id}`);
-    }
+      const providersUrl = new URL(
+        `https://api.themoviedb.org/3/${type}/${id}/watch/providers`
+      );
 
-    return { type, data: await response.json() };
-  }));
+      detailsUrl.searchParams.set('api_key', apiKey);
+      detailsUrl.searchParams.set('language', 'de-DE');
+
+      providersUrl.searchParams.set('api_key', apiKey);
+
+      const [detailsResponse, providersResponse] = await Promise.all([
+        fetch(detailsUrl),
+        fetch(providersUrl)
+      ]);
+
+      if (!detailsResponse.ok || !providersResponse.ok) {
+        throw new Error(`TMDB-Daten für ${type} ${id} konnten nicht geladen werden`);
+      }
+
+      const details = await detailsResponse.json();
+      const providers = await providersResponse.json();
+
+      return {
+        type,
+        data: {
+          ...details,
+
+          // AT = Österreich
+          // Für Deutschland stattdessen DE verwenden
+          watchProviders: providers.results?.AT || {}
+        }
+      };
+    })
+  );
 
   homeCache.movies = results
-    .filter(result => result.status === 'fulfilled' && result.value.type === 'movie')
+    .filter(result =>
+      result.status === 'fulfilled' &&
+      result.value.type === 'movie'
+    )
     .map(result => result.value.data);
+
   homeCache.tvShows = results
-    .filter(result => result.status === 'fulfilled' && result.value.type === 'tv')
+    .filter(result =>
+      result.status === 'fulfilled' &&
+      result.value.type === 'tv'
+    )
     .map(result => result.value.data);
-  homeCache.expiresAt = Date.now() + (homeCache.movies.length + homeCache.tvShows.length === requests.length ? 10 : 1) * 60_000;
+
+  homeCache.expiresAt =
+    Date.now() +
+    (
+      homeCache.movies.length + homeCache.tvShows.length === requests.length
+        ? 10
+        : 1
+    ) * 60_000;
 }
 
 async function renderHome(req, res) {
