@@ -30,14 +30,12 @@
               <div class="movie-info text-break">
                 <h3 class="h6 mb-1"><%= movie.title %></h3>
                 <span><%= movie.release_date?.slice(0, 4) || 'Jahr offen' %><% if (movie.runtime) { %> · <%= movie.runtime %> Min.<% } %></span>
-                <% if (movie.watchProviders?.flatrate?.length) { %>
-                  <p class="small mt-1 mb-1">Anschauen auf:
-                    <% movie.watchProviders.flatrate.forEach((provider, index) => { %>
-                      <% if (index > 0) { %>, <% } %><%= provider.provider_name %>
+                <% if (movie.streamingProviders?.length) { %>
+                  <div class="service-tag" aria-label="Verfügbar bei">
+                    <% movie.streamingProviders.forEach(provider => { %>
+                      <img class="provider-logo" src="<%= provider.logo %>" alt="<%= provider.name %>" title="<%= provider.name %>">
                     <% }) %>
-                  </p>
-                <% } else { %>
-                  <p class="small mt-1 mb-1">Kein Streaming-Abo in Österreich gefunden</p>
+                  </div>
                 <% } %>
                 <% if (movie.genres?.length) { %><p class="small mt-1 mb-1"><%= movie.genres.map(genre => genre.name).join(', ') %></p><% } %>
                 <% if (movie.overview) { %><details class="small mt-1"><summary>Inhalt</summary><p class="mt-1 mb-0"><%= movie.overview %></p></details><% } %>
@@ -55,14 +53,12 @@
               <div class="movie-info text-break">
                 <h3 class="h6 mb-1"><%= tvShow.name %></h3>
                 <span><%= tvShow.first_air_date?.slice(0, 4) || 'Jahr offen' %><% if (tvShow.episode_run_time?.[0]) { %> · <%= tvShow.episode_run_time[0] %> Min. pro Folge<% } %></span>
-                <% if (tvShow.watchProviders?.flatrate?.length) { %>
-                  <p class="small mt-1 mb-1">Anschauen auf:
-                    <% tvShow.watchProviders.flatrate.forEach((provider, index) => { %>
-                      <% if (index > 0) { %>, <% } %><%= provider.provider_name %>
+                <% if (tvShow.streamingProviders?.length) { %>
+                  <div class="service-tag" aria-label="Verfügbar bei">
+                    <% tvShow.streamingProviders.forEach(provider => { %>
+                      <img class="provider-logo" src="<%= provider.logo %>" alt="<%= provider.name %>" title="<%= provider.name %>">
                     <% }) %>
-                  </p>
-                <% } else { %>
-                  <p class="small mt-1 mb-1">Kein Streaming-Abo in Österreich gefunden</p>
+                  </div>
                 <% } %>
                 <% if (tvShow.genres?.length) { %><p class="small mt-1 mb-1"><%= tvShow.genres.map(genre => genre.name).join(', ') %></p><% } %>
                 <% if (tvShow.overview) { %><details class="small mt-1"><summary>Inhalt</summary><p class="mt-1 mb-0"><%= tvShow.overview %></p></details><% } %>
