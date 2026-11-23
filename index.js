@@ -78,8 +78,8 @@ async function loadHomeContent(apiKey) {
               name: provider.provider_name,
               url: getProviderUrl(
                 provider.provider_id,
-                providers.results?.AT?.link,
-                details.title || details.name
+                details.title || details.name,
+                provider.provider_name
               ),
               logoUrl: `https://image.tmdb.org/t/p/w92${provider.logo_path}`
             }))
