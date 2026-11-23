@@ -24,6 +24,17 @@
                 <% if (movie.runtime) { %> · <%= movie.runtime %> Min.<% } %>
               </span>
 
+              <% if (movie.streamingProviders?.length) { %>
+                <div class="service-tag" aria-label="Verfügbar bei">
+                  <% movie.streamingProviders.forEach(provider => { %>
+                    <span class="provider-service">
+                      <img class="provider-logo" src="<%= provider.logoUrl %>" alt="<%= provider.name %>" title="<%= provider.name %>">
+                      <span><%= provider.name %></span>
+                    </span>
+                  <% }) %>
+                </div>
+              <% } %>
+
               <% if (movie.genres?.length) { %>
                 <p class="small mt-1 mb-1"><%= movie.genres.map(genre => genre.name).join(', ') %></p>
               <% } %>

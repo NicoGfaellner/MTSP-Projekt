@@ -344,12 +344,23 @@ main{
     font-size: .8rem;
 }
 .service-tag{
-    display: flex;
+    display: inline-flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: .4rem;
-    margin-top: .6rem;
+    margin-left: .5rem;
+    vertical-align: middle;
     color: #cccccc;
     font-size: .8rem;
+}
+.provider-service{
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+}
+.provider-service .provider-logo{
+    width: 24px;
+    height: 24px;
 }
 .service-tag .provider-dot{
     width: 19px;

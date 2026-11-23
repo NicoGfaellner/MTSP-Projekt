@@ -24,6 +24,17 @@
                 <% if (tvShow.episode_run_time?.[0]) { %> · <%= tvShow.episode_run_time[0] %> Min. pro Folge<% } %>
               </span>
 
+              <% if (tvShow.streamingProviders?.length) { %>
+                <div class="service-tag" aria-label="Verfügbar bei">
+                  <% tvShow.streamingProviders.forEach(provider => { %>
+                    <span class="provider-service">
+                      <img class="provider-logo" src="<%= provider.logoUrl %>" alt="<%= provider.name %>" title="<%= provider.name %>">
+                      <span><%= provider.name %></span>
+                    </span>
+                  <% }) %>
+                </div>
+              <% } %>
+
               <% if (tvShow.genres?.length) { %>
                 <p class="small mt-1 mb-1"><%= tvShow.genres.map(genre => genre.name).join(', ') %></p>
               <% } %>

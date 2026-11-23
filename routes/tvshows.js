@@ -1,5 +1,6 @@
 const express = require('express');
 const tvShowIds = require('../data/tvshowIDs.js');
+const { fetchTitleWithProviders } = require('../tmdbProviders');
 
 const router = express.Router();
 
@@ -7,18 +8,9 @@ const tvShowCache = { tvShows: [], expiresAt: 0 };
 let loadingTvShows = null;
 
 async function loadTvShows(apiKey) {
-  const results = await Promise.allSettled(tvShowIds.map(async (id) => {
-    const url = new URL(`https://api.themoviedb.org/3/tv/${id}`);
-    url.searchParams.set('api_key', apiKey);
-    url.searchParams.set('language', 'de-DE');
-
-    const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
-    if (!response.ok) {
-      throw new Error(`TMDB HTTP ${response.status} bei Serie ${id}`);
-    }
-
-    return response.json();
-  }));
+  const results = await Promise.allSettled(
+    tvShowIds.map(id => fetchTitleWithProviders('tv', id, apiKey))
+  );
 
   const tvShows = results
     .filter(result => result.status === 'fulfilled')

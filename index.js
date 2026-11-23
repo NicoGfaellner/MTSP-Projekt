@@ -26,13 +26,6 @@ server.set('view engine', 'ejs');
 const homeCache = { movies: [], tvShows: [], expiresAt: 0 };
 let loadingHomeContent = null;
 
-const allowedProviders = new Map([
-  [8, { name: 'Netflix', logo: '/images/netflix.svg' }],
-  [337, { name: 'Disney+', logo: '/images/disney-plus.svg' }],
-  [119, { name: 'Prime Video', logo: '/images/prime-video.svg' }],
-  [350, { name: 'Apple TV+', logo: '/images/apple-tv.svg' }]
-]);
-
 async function loadHomeContent(apiKey) {
   const requests = [
     ...movieIds.slice(0, 3).map(id => ({ type: 'movie', id })),
@@ -73,11 +66,16 @@ async function loadHomeContent(apiKey) {
 
           // AT = Österreich
           // Für Deutschland stattdessen DE verwenden
-          streamingProviders: (providers.results?.AT?.flatrate || [])
-            .filter(provider => allowedProviders.has(provider.provider_id))
+          streamingProviders: ['flatrate', 'free', 'ads', 'rent', 'buy']
+            .flatMap(category => providers.results?.AT?.[category] || [])
+            .filter((provider, index, allProviders) =>
+              allProviders.findIndex(item => item.provider_id === provider.provider_id) === index
+            )
+            .filter(provider => provider.logo_path)
             .map(provider => ({
-              ...allowedProviders.get(provider.provider_id),
-              id: provider.provider_id
+              id: provider.provider_id,
+              name: provider.provider_name,
+              logoUrl: `https://image.tmdb.org/t/p/w92${provider.logo_path}`
             }))
         }
       };

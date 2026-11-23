@@ -33,7 +33,10 @@
                 <% if (movie.streamingProviders?.length) { %>
                   <div class="service-tag" aria-label="Verfügbar bei">
                     <% movie.streamingProviders.forEach(provider => { %>
-                      <img class="provider-logo" src="<%= provider.logo %>" alt="<%= provider.name %>" title="<%= provider.name %>">
+                      <span class="provider-service">
+                        <img class="provider-logo" src="<%= provider.logoUrl %>" alt="<%= provider.name %>" title="<%= provider.name %>">
+                        <span><%= provider.name %></span>
+                      </span>
                     <% }) %>
                   </div>
                 <% } %>
@@ -56,7 +59,10 @@
                 <% if (tvShow.streamingProviders?.length) { %>
                   <div class="service-tag" aria-label="Verfügbar bei">
                     <% tvShow.streamingProviders.forEach(provider => { %>
-                      <img class="provider-logo" src="<%= provider.logo %>" alt="<%= provider.name %>" title="<%= provider.name %>">
+                      <span class="provider-service">
+                        <img class="provider-logo" src="<%= provider.logoUrl %>" alt="<%= provider.name %>" title="<%= provider.name %>">
+                        <span><%= provider.name %></span>
+                      </span>
                     <% }) %>
                   </div>
                 <% } %>
