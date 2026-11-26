@@ -37,4 +37,5 @@ module.exports = [
   9395, //Nico
   7446, //Tropic Thunder
   957, //Spaceballs
+  511078, //Nigger
 ];
