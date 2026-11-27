@@ -159,7 +159,7 @@ server.get('/impressum', (req, res) => {
   res.render("impressum", {layout: "./layouts/main"});
 });
 
-server.use('/movies', moviesRouter);
+server.use(['/movies', '/filme'], moviesRouter);
 
 server.use('/tvshows', tvShowsRouter);
 

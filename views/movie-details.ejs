@@ -1,0 +1,57 @@
+<section class="content-page container">
+  <p class="mb-3"><a href="<%= moviesPath %>">← Zur Filmübersicht</a></p>
+
+  <% if (movie) { %>
+    <div class="page-heading">
+      <h1><%= movie.title %></h1>
+    </div>
+
+    <div class="content-panel">
+      <div class="row g-4">
+        <% if (movie.poster_path) { %>
+          <div class="col-7 col-sm-4 col-md-3">
+            <img class="img-fluid w-100 rounded"
+                 src="https://image.tmdb.org/t/p/w500<%= movie.poster_path %>"
+                 alt="Poster zu <%= movie.title %>">
+          </div>
+        <% } %>
+
+        <div class="col-12 col-sm">
+          <p class="mb-2">
+            <%= movie.release_date?.slice(0, 4) || 'Jahr offen' %>
+            <% if (movie.runtime) { %> · <%= movie.runtime %> Min.<% } %>
+          </p>
+
+          <% if (movie.genres?.length) { %>
+            <p class="mb-2"><%= movie.genres.map(genre => genre.name).join(', ') %></p>
+          <% } %>
+
+          <% if (movie.vote_count > 0 && Number.isFinite(movie.vote_average)) { %>
+            <p class="mb-2">TMDB-Bewertung <%= movie.vote_average.toFixed(1).replace('.', ',') %> / 10</p>
+          <% } %>
+
+          <h2 class="h5 mt-4">Handlung</h2>
+          <p><%= movie.overview || 'Keine Inhaltsangabe verfügbar.' %></p>
+
+          <% if (movie.streamingProviders?.length) { %>
+            <h2 class="h5 mt-4">Anbieter in Österreich</h2>
+            <div class="service-tag ms-0">
+              <% for (const provider of movie.streamingProviders) { %>
+                <span class="provider-service">
+                  <a href="<%= provider.url %>" target="_blank" rel="noopener noreferrer">
+                    <img class="provider-logo" src="<%= provider.logoUrl %>"
+                         alt="<%= provider.name %>" title="<%= provider.name %>">
+                  </a>
+                </span>
+              <% } %>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="page-heading">
+      <h1><%= message %></h1>
+    </div>
+  <% } %>
+</section>

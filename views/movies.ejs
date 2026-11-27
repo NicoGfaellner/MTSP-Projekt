@@ -8,7 +8,7 @@
     <div class="row row-cols-3 g-2 g-md-4">
       <% for (const movie of movies) { %>
         <div class="col">
-          <article class="movie-card">
+           <article class="movie-card position-relative">
             <% if (movie.poster_path) { %>
               <img class="d-block w-100 rounded"
                    src="https://image.tmdb.org/t/p/w500<%= movie.poster_path %>"
@@ -18,14 +18,16 @@
             <% } %>
 
             <div class="movie-info text-break">
-              <h2 class="h6 mb-1"><%= movie.title %></h2>
+              <h2 class="h6 mb-1">
+                <a class="stretched-link" href="<%= moviesPath %>/<%= movie.id %>"><%= movie.title %></a>
+              </h2>
               <span>
                 <%= movie.release_date?.slice(0, 4) || 'Jahr offen' %>
                 <% if (movie.runtime) { %> · <%= movie.runtime %> Min.<% } %>
               </span>
 
               <% if (movie.streamingProviders?.length) { %>
-                <div class="service-tag" aria-label="Verfügbar bei">
+                <div class="service-tag position-relative z-2" aria-label="Verfügbar bei">
                   <% movie.streamingProviders.forEach(provider => { %>
                     <span class="provider-service">
                       <a href="<%= provider.url %>" target="_blank" rel="noopener noreferrer">
@@ -41,7 +43,7 @@
               <% } %>
 
               <% if (movie.overview) { %>
-                <details class="small mt-1">
+                <details class="small mt-1 position-relative z-2">
                   <summary>Inhalt</summary>
                   <p class="mt-1 mb-0"><%= movie.overview %></p>
                 </details>
