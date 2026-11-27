@@ -6,7 +6,15 @@
   const createForm = document.querySelector('[data-watchlist-create]');
   const renameForm = document.querySelector('[data-watchlist-rename]');
   const renameInput = renameForm?.elements.namedItem('name');
+  const pickerDialog = document.querySelector('[data-watchlist-dialog]');
+  const pickerItemLabel = document.querySelector('[data-watchlist-dialog-item]');
+  const pickerSelect = document.querySelector('[data-watchlist-target]');
+  const pickerStatus = document.querySelector('[data-watchlist-dialog-status]');
+  const pickerAddButton = document.querySelector('[data-watchlist-dialog-add]');
+  const pickerRemoveButton = document.querySelector('[data-watchlist-dialog-remove]');
+  const pickerCloseButton = document.querySelector('[data-watchlist-dialog-close]');
   let announcement = document.querySelector('[data-watchlist-announcement]');
+  let pendingItem = null;
 
   if (!announcement) {
     announcement = document.createElement('p');
@@ -150,18 +158,54 @@
   }
 
   function updateAddButtons() {
-    const savedKeys = new Set(activeList().items.map(itemKey));
-
     document.querySelectorAll('[data-watchlist-add]').forEach(button => {
-      const saved = savedKeys.has(`${button.dataset.type}:${button.dataset.id}`);
-      button.setAttribute('aria-pressed', String(saved));
-      button.textContent = saved
-        ? 'Aus dieser Watchlist entfernen'
-        : 'Zur Watchlist hinzufügen';
-      button.title = saved
-        ? `Aus „${activeList().name}“ entfernen`
-        : `Zu „${activeList().name}“ hinzufügen`;
+      const key = `${button.dataset.type}:${button.dataset.id}`;
+      const savedIn = state.lists.filter(list => list.items.some(item => itemKey(item) === key));
+      button.textContent = 'Zur Watchlist hinzufügen';
+      button.title = savedIn.length > 0
+        ? `Bereits gespeichert in: ${savedIn.map(list => list.name).join(', ')}. Klicken zum Auswählen.`
+        : 'Klicken, um eine Watchlist auszuwählen.';
     });
+  }
+
+  function renderPickerOptions() {
+    if (!pickerSelect) return;
+
+    const selectedId = pickerSelect.value;
+    pickerSelect.replaceChildren();
+    state.lists.forEach(list => {
+      const option = document.createElement('option');
+      option.value = list.id;
+      option.textContent = list.name;
+      pickerSelect.appendChild(option);
+    });
+    pickerSelect.value = state.lists.some(list => list.id === selectedId)
+      ? selectedId
+      : activeList().id;
+  }
+
+  function updatePickerState() {
+    if (!pendingItem || !pickerSelect) return;
+
+    const list = state.lists.find(item => item.id === pickerSelect.value) || activeList();
+    const alreadySaved = list.items.some(item => itemKey(item) === itemKey(pendingItem));
+    pickerStatus.textContent = alreadySaved
+      ? `„${pendingItem.title}“ ist bereits in „${list.name}“ gespeichert.`
+      : `„${pendingItem.title}“ wird zu „${list.name}“ hinzugefügt.`;
+    pickerAddButton.hidden = alreadySaved;
+    pickerRemoveButton.hidden = !alreadySaved;
+    pickerRemoveButton.textContent = `Aus „${list.name}“ entfernen`;
+  }
+
+  function openPicker(item) {
+    if (!pickerDialog || !pickerSelect) return;
+
+    pendingItem = item;
+    pickerItemLabel.textContent = item.title;
+    renderPickerOptions();
+    pickerSelect.value = activeList().id;
+    updatePickerState();
+    pickerDialog.showModal();
   }
 
   function detailUrl(item) {
@@ -282,6 +326,10 @@
     renderListControls();
     updateAddButtons();
     renderWatchlist();
+    if (pickerDialog?.open && pendingItem) {
+      renderPickerOptions();
+      updatePickerState();
+    }
   }
 
   function hasDuplicateName(name, excludedId) {
@@ -340,9 +388,64 @@
     }
   });
 
+  pickerSelect?.addEventListener('change', updatePickerState);
+
+  pickerAddButton?.addEventListener('click', () => {
+    if (!pendingItem || !pickerSelect) return;
+
+    const nextState = copyState();
+    const list = nextState.lists.find(item => item.id === pickerSelect.value);
+    if (!list || list.items.some(item => itemKey(item) === itemKey(pendingItem))) return;
+
+    list.items.push(pendingItem);
+    nextState.activeListId = list.id;
+    if (saveState(nextState)) {
+      announcement.textContent = `Zu „${list.name}“ hinzugefügt.`;
+      render();
+      pickerDialog.close();
+    }
+  });
+
+  pickerRemoveButton?.addEventListener('click', () => {
+    if (!pendingItem || !pickerSelect) return;
+
+    const nextState = copyState();
+    const list = nextState.lists.find(item => item.id === pickerSelect.value);
+    if (!list) return;
+
+    const itemIndex = list.items.findIndex(item => itemKey(item) === itemKey(pendingItem));
+    if (itemIndex < 0) return;
+
+    list.items.splice(itemIndex, 1);
+    nextState.activeListId = list.id;
+    if (saveState(nextState)) {
+      announcement.textContent = `Aus „${list.name}“ entfernt.`;
+      render();
+      pickerDialog.close();
+    }
+  });
+
+  pickerCloseButton?.addEventListener('click', () => pickerDialog.close());
+  pickerDialog?.addEventListener('close', () => {
+    pendingItem = null;
+  });
+
   document.addEventListener('click', event => {
     const target = event.target instanceof Element ? event.target : null;
-    const button = target?.closest('[data-watchlist-add], [data-watchlist-remove]');
+    const addButton = target?.closest('[data-watchlist-add]');
+    if (addButton) {
+      const item = normalizeItem({
+        id: addButton.dataset.id,
+        type: addButton.dataset.type,
+        title: addButton.dataset.title,
+        year: addButton.dataset.year,
+        posterPath: addButton.dataset.posterPath
+      });
+      if (item) openPicker(item);
+      return;
+    }
+
+    const button = target?.closest('[data-watchlist-remove]');
     if (!button) return;
 
     const type = button.dataset.type;
@@ -353,21 +456,9 @@
     const list = nextState.lists.find(item => item.id === nextState.activeListId);
     const existingIndex = list.items.findIndex(item => itemKey(item) === `${type}:${id}`);
 
-    if (button.hasAttribute('data-watchlist-remove') || existingIndex >= 0) {
-      if (existingIndex >= 0) list.items.splice(existingIndex, 1);
-      announcement.textContent = `Eintrag aus „${list.name}“ entfernt.`;
-    } else {
-      const item = normalizeItem({
-        id,
-        type,
-        title: button.dataset.title,
-        year: button.dataset.year,
-        posterPath: button.dataset.posterPath
-      });
-      if (!item) return;
-      list.items.push(item);
-      announcement.textContent = `Zu „${list.name}“ hinzugefügt.`;
-    }
+    if (existingIndex < 0) return;
+    list.items.splice(existingIndex, 1);
+    announcement.textContent = `Eintrag aus „${list.name}“ entfernt.`;
 
     if (saveState(nextState)) render();
   });

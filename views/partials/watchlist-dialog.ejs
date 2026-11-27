@@ -1,0 +1,16 @@
+<dialog class="watchlist-dialog" data-watchlist-dialog aria-labelledby="watchlistDialogTitle">
+  <div class="watchlist-dialog-content">
+    <h2 id="watchlistDialogTitle" class="h5">Zu einer Watchlist hinzufügen</h2>
+    <p class="watchlist-dialog-item" data-watchlist-dialog-item></p>
+
+    <label for="watchlistTargetSelect">In welche Watchlist?</label>
+    <select id="watchlistTargetSelect" class="form-select" data-watchlist-target></select>
+    <p class="watchlist-dialog-status" data-watchlist-dialog-status aria-live="polite"></p>
+
+    <div class="watchlist-dialog-actions">
+      <button class="btn watchlist-button" type="button" data-watchlist-dialog-add>Hinzufügen</button>
+      <button class="btn watchlist-button" type="button" data-watchlist-dialog-remove hidden>Aus dieser Watchlist entfernen</button>
+      <button class="btn watchlist-cancel-button" type="button" data-watchlist-dialog-close>Abbrechen</button>
+    </div>
+  </div>
+</dialog>

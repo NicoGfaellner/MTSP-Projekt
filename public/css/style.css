@@ -411,6 +411,65 @@ main{
     flex: 0 0 auto;
     margin-top: 0;
 }
+.watchlist-dialog{
+    width: min(92vw, 520px);
+    max-width: none;
+    padding: 0;
+    color: var(--text-color);
+    background-color: var(--surface-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, .45);
+}
+.watchlist-dialog::backdrop{
+    background-color: rgba(0, 0, 0, .72);
+}
+.watchlist-dialog-content{
+    padding: 1.5rem;
+}
+.watchlist-dialog-content h2{
+    color: #ededed;
+}
+.watchlist-dialog-item{
+    margin-bottom: 1.25rem;
+    color: var(--muted-color);
+}
+.watchlist-dialog-content label{
+    display: block;
+    margin-bottom: .4rem;
+    color: #ededed;
+    font-weight: 600;
+}
+.watchlist-dialog-content .form-select{
+    color: #ededed;
+    background-color: var(--page-bg);
+    border-color: #666666;
+}
+.watchlist-dialog-content .form-select option{
+    color: #ededed;
+    background-color: var(--page-bg);
+}
+.watchlist-dialog-status{
+    min-height: 1.5em;
+    margin: .75rem 0 1rem;
+    color: var(--muted-color);
+    font-size: .9rem;
+}
+.watchlist-dialog-actions{
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+.watchlist-cancel-button{
+    color: var(--link-color);
+    border: 1px solid var(--border-color);
+    border-radius: 2px;
+}
+.watchlist-cancel-button:hover{
+    color: #ffffff;
+    background-color: var(--button-bg);
+    border-color: var(--button-bg);
+}
 .service-tag{
     display: inline-flex;
     flex-wrap: wrap;
