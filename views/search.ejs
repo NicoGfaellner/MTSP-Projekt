@@ -1,0 +1,59 @@
+<section class="content-page container">
+  <div class="page-heading">
+    <h1>Suchergebnisse</h1>
+    <p>Ergebnisse für „<%= query %>“</p>
+  </div>
+
+  <% if (results.length > 0) { %>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-2 g-md-4">
+      <% for (const item of results) {
+        const title = item.title || item.name || 'Ohne Titel';
+        const year = item.release_date?.slice(0, 4) || item.first_air_date?.slice(0, 4) || 'Jahr offen';
+        const type = item.mediaType === 'tv' ? 'Serie' : 'Film';
+        const runtime = item.runtime || item.episode_run_time?.[0];
+      %>
+        <div class="col">
+          <article class="movie-card">
+            <% if (item.poster_path) { %>
+              <img class="d-block w-100 rounded"
+                   src="https://image.tmdb.org/t/p/w500<%= item.poster_path %>"
+                   alt="Poster zu <%= title %>"
+                   loading="lazy"
+                   style="aspect-ratio: 2 / 3; object-fit: cover;">
+            <% } %>
+
+            <div class="movie-info text-break">
+              <h2 class="h6 mb-1"><%= title %></h2>
+              <span><%= year %> · <%= type %><% if (runtime) { %> · <%= runtime %> Min.<% } %></span>
+
+              <% if (item.streamingProviders?.length) { %>
+                <div class="service-tag" aria-label="Verfügbar bei">
+                  <% item.streamingProviders.forEach(provider => { %>
+                    <span class="provider-service">
+                      <a href="<%= provider.url %>" target="_blank" rel="noopener noreferrer">
+                        <img class="provider-logo" src="<%= provider.logoUrl %>" alt="<%= provider.name %>" title="<%= provider.name %>">
+                      </a>
+                    </span>
+                  <% }) %>
+                </div>
+              <% } %>
+
+              <% if (item.genres?.length) { %>
+                <p class="small mt-1 mb-1"><%= item.genres.map(genre => genre.name).join(', ') %></p>
+              <% } %>
+
+              <% if (item.overview) { %>
+                <details class="small mt-1">
+                  <summary>Inhalt</summary>
+                  <p class="mt-1 mb-0"><%= item.overview %></p>
+                </details>
+              <% } %>
+            </div>
+          </article>
+        </div>
+      <% } %>
+    </div>
+  <% } else { %>
+    <p class="content-panel">Zu deiner Suche wurden keine Filme oder Serien gefunden.</p>
+  <% } %>
+</section>

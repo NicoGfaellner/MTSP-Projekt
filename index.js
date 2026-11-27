@@ -165,15 +165,21 @@ server.get('/search', async (req, res) => {
       .filter(item => ['movie', 'tv'].includes(item.media_type))
       .slice(0, 10);
 
-    const loaded = await Promise.allSettled(
-      matches.map(item =>
-        fetchTitleWithProviders(item.media_type, item.id, apiKey)
-      )
+    const titles = await Promise.all(
+      matches.map(async item => {
+        try {
+          const details = await fetchTitleWithProviders(
+            item.media_type,
+            item.id,
+            apiKey
+          );
+          return { ...details, mediaType: item.media_type };
+        } catch (error) {
+          // Keep the search result visible if provider details cannot be loaded.
+          return { ...item, mediaType: item.media_type, streamingProviders: [] };
+        }
+      })
     );
-
-    const titles = loaded
-      .filter(result => result.status === 'fulfilled')
-      .map(result => result.value);
 
     res.render('search', {
       layout: './layouts/main',
