@@ -40,4 +40,38 @@ router.get('/', async (req, res) => {
   res.status(status).render('tvshows', { tvShows: tvShowCache.tvShows });
 });
 
+router.get('/:id', async (req, res) => {
+  const tvShowId = Number(req.params.id);
+
+  const renderError = status => res.status(status).render('tvshow-details', {
+    tvShow: null,
+    message: status === 404
+      ? 'Serie nicht gefunden.'
+      : 'Die Serie konnte gerade nicht geladen werden.'
+  });
+
+  if (!/^[1-9]\d*$/.test(req.params.id) || !Number.isSafeInteger(tvShowId)) {
+    return renderError(404);
+  }
+
+  const apiKey = process.env.TMDB_API_KEY;
+  if (!apiKey) {
+    console.error('TMDB_API_KEY fehlt.');
+    return renderError(500);
+  }
+
+  let tvShow;
+  try {
+    if (Date.now() < tvShowCache.expiresAt) {
+      tvShow = tvShowCache.tvShows.find(entry => entry.id === tvShowId);
+    }
+
+    tvShow ??= await fetchTitleWithProviders('tv', tvShowId, apiKey);
+  } catch (error) {
+    return renderError(error.status === 404 ? 404 : 502);
+  }
+
+  res.render('tvshow-details', { tvShow });
+});
+
 module.exports = router;

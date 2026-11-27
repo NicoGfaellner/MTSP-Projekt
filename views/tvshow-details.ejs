@@ -1,0 +1,62 @@
+<section class="content-page container">
+  <p class="mb-3"><a href="/tvshows">← Zur Serienübersicht</a></p>
+
+  <% if (tvShow) { %>
+    <div class="page-heading">
+      <h1><%= tvShow.name %></h1>
+    </div>
+
+    <div class="content-panel">
+      <div class="row g-4">
+        <% if (tvShow.poster_path) { %>
+          <div class="col-7 col-sm-4 col-md-3">
+            <img class="img-fluid w-100 rounded"
+                 src="https://image.tmdb.org/t/p/w500<%= tvShow.poster_path %>"
+                 alt="Poster zu <%= tvShow.name %>">
+          </div>
+        <% } %>
+
+        <div class="col-12 col-sm">
+          <p class="mb-2">
+            <%= tvShow.first_air_date?.slice(0, 4) || 'Jahr offen' %>
+            <% if (tvShow.episode_run_time?.[0]) { %>
+              · <%= tvShow.episode_run_time[0] %> Min. pro Folge
+            <% } %>
+            <% if (tvShow.number_of_seasons > 0) { %>
+              · <%= tvShow.number_of_seasons %> <%= tvShow.number_of_seasons === 1 ? 'Staffel' : 'Staffeln' %>
+            <% } %>
+          </p>
+
+          <% if (tvShow.genres?.length) { %>
+            <p class="mb-2"><%= tvShow.genres.map(genre => genre.name).join(', ') %></p>
+          <% } %>
+
+          <% if (tvShow.vote_count > 0 && Number.isFinite(tvShow.vote_average)) { %>
+            <p class="mb-2">TMDB-Bewertung <%= tvShow.vote_average.toFixed(1).replace('.', ',') %> / 10</p>
+          <% } %>
+
+          <h2 class="h5 mt-4">Handlung</h2>
+          <p><%= tvShow.overview || 'Keine Inhaltsangabe verfügbar.' %></p>
+
+          <% if (tvShow.streamingProviders?.length) { %>
+            <h2 class="h5 mt-4">Anbieter in Österreich</h2>
+            <div class="service-tag ms-0">
+              <% for (const provider of tvShow.streamingProviders) { %>
+                <span class="provider-service">
+                  <a href="<%= provider.url %>" target="_blank" rel="noopener noreferrer">
+                    <img class="provider-logo" src="<%= provider.logoUrl %>"
+                         alt="<%= provider.name %>" title="<%= provider.name %>">
+                  </a>
+                </span>
+              <% } %>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="page-heading">
+      <h1><%= message %></h1>
+    </div>
+  <% } %>
+</section>

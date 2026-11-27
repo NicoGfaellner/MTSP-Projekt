@@ -8,7 +8,7 @@
     <div class="row row-cols-3 g-2 g-md-4">
       <% for (const tvShow of tvShows) { %>
         <div class="col">
-          <article class="movie-card">
+          <article class="movie-card position-relative">
             <% if (tvShow.poster_path) { %>
               <img class="d-block w-100 rounded"
                    src="https://image.tmdb.org/t/p/w500<%= tvShow.poster_path %>"
@@ -18,14 +18,16 @@
             <% } %>
 
             <div class="movie-info text-break">
-              <h2 class="h6 mb-1"><%= tvShow.name %></h2>
+              <h2 class="h6 mb-1">
+                <a class="stretched-link" href="/tvshows/<%= tvShow.id %>"><%= tvShow.name %></a>
+              </h2>
               <span>
                 <%= tvShow.first_air_date?.slice(0, 4) || 'Jahr offen' %>
                 <% if (tvShow.episode_run_time?.[0]) { %> · <%= tvShow.episode_run_time[0] %> Min. pro Folge<% } %>
               </span>
 
               <% if (tvShow.streamingProviders?.length) { %>
-                <div class="service-tag" aria-label="Verfügbar bei">
+                <div class="service-tag position-relative z-2" aria-label="Verfügbar bei">
                   <% tvShow.streamingProviders.forEach(provider => { %>
                     <span class="provider-service">
                       <a href="<%= provider.url %>" target="_blank" rel="noopener noreferrer">
@@ -41,7 +43,7 @@
               <% } %>
 
               <% if (tvShow.overview) { %>
-                <details class="small mt-1">
+                <details class="small mt-1 position-relative z-2">
                   <summary>Inhalt</summary>
                   <p class="mt-1 mb-0"><%= tvShow.overview %></p>
                 </details>
