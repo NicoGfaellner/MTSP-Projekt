@@ -367,6 +367,50 @@ main{
 .watchlist-remove-button{
     display: block;
 }
+.watchlist-title-link{
+    color: #ededed;
+    text-decoration: none;
+}
+.watchlist-title-link:hover{
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+.watchlist-manager{
+    margin-bottom: 1.75rem;
+}
+.watchlist-form label{
+    display: block;
+    margin-bottom: .4rem;
+    color: #ededed;
+    font-weight: 600;
+}
+.watchlist-form .form-control,
+.watchlist-form .form-select{
+    color: #ededed;
+    background-color: var(--surface-bg);
+    border-color: #666666;
+}
+.watchlist-form .form-select option{
+    color: #ededed;
+    background-color: var(--surface-bg);
+}
+.watchlist-form-row{
+    display: flex;
+    gap: .5rem;
+}
+.watchlist-form-row .form-control{
+    max-width: 420px;
+}
+.watchlist-selected-controls{
+    display: grid;
+    grid-template-columns: minmax(180px, 1fr) minmax(240px, 2fr);
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+.watchlist-form-row .watchlist-button{
+    flex: 0 0 auto;
+    margin-top: 0;
+}
 .service-tag{
     display: inline-flex;
     flex-wrap: wrap;
@@ -492,5 +536,14 @@ main{
     }
     .movie-poster strong{
         font-size: 1.1rem;
+    }
+    .watchlist-form-row{
+        flex-direction: column;
+    }
+    .watchlist-form-row .form-control{
+        max-width: none;
+    }
+    .watchlist-selected-controls{
+        grid-template-columns: 1fr;
     }
 }

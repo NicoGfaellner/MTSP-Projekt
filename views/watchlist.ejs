@@ -1,7 +1,33 @@
 <section class="content-page container">
   <div class="page-heading">
     <h1>Meine Watchlist</h1>
-    <p>Filme und Serien, die du dir merken möchtest.</p>
+    <p>Erstelle eigene Listen und sammle darin Filme und Serien.</p>
+  </div>
+
+  <div class="watchlist-manager content-panel">
+    <form class="watchlist-form" data-watchlist-create>
+      <label for="newWatchlistName">Neue Watchlist erstellen</label>
+      <div class="watchlist-form-row">
+        <input id="newWatchlistName" class="form-control" name="name" type="text" maxlength="40" placeholder="z. B. Filmabend" required>
+        <button class="btn watchlist-button" type="submit">Erstellen</button>
+      </div>
+    </form>
+
+    <div class="watchlist-selected-controls">
+      <div class="watchlist-form">
+        <label for="watchlistSelect">Watchlist auswählen</label>
+        <select id="watchlistSelect" class="form-select" data-watchlist-select></select>
+      </div>
+
+      <form class="watchlist-form" data-watchlist-rename>
+        <label for="renameWatchlistName">Ausgewählte Watchlist umbenennen</label>
+        <div class="watchlist-form-row">
+          <input id="renameWatchlistName" class="form-control" name="name" type="text" maxlength="40" required>
+          <button class="btn watchlist-button" type="submit">Umbenennen</button>
+        </div>
+      </form>
+
+    </div>
   </div>
 
   <div id="watchlistResults" data-watchlist-results></div>
