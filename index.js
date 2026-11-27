@@ -143,6 +143,10 @@ server.get('/', renderHome);
 
 server.get('/index', renderHome);
 
+server.get('/watchlist', (req, res) => {
+  res.render('watchlist', { layout: './layouts/main' });
+});
+
 server.get('/search', async (req, res) => {
   const query = String(req.query.q ?? '').trim();
 

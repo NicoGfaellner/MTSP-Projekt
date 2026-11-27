@@ -48,6 +48,8 @@
                   <p class="mt-1 mb-0"><%= item.overview %></p>
                 </details>
               <% } %>
+
+              <%- include('partials/watchlist-button', { item, type: item.mediaType, title, year }) %>
             </div>
           </article>
         </div>

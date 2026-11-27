@@ -43,6 +43,7 @@
                 <% } %>
                 <% if (movie.genres?.length) { %><p class="small mt-1 mb-1"><%= movie.genres.map(genre => genre.name).join(', ') %></p><% } %>
                 <% if (movie.overview) { %><details class="small mt-1"><summary>Inhalt</summary><p class="mt-1 mb-0"><%= movie.overview %></p></details><% } %>
+                <%- include('partials/watchlist-button', { item: movie, type: 'movie', title: movie.title, year: movie.release_date?.slice(0, 4) }) %>
               </div>
             </article>
           </div>
@@ -70,6 +71,7 @@
                 <% } %>
                 <% if (tvShow.genres?.length) { %><p class="small mt-1 mb-1"><%= tvShow.genres.map(genre => genre.name).join(', ') %></p><% } %>
                 <% if (tvShow.overview) { %><details class="small mt-1"><summary>Inhalt</summary><p class="mt-1 mb-0"><%= tvShow.overview %></p></details><% } %>
+                <%- include('partials/watchlist-button', { item: tvShow, type: 'tv', title: tvShow.name, year: tvShow.first_air_date?.slice(0, 4) }) %>
               </div>
             </article>
           </div>
