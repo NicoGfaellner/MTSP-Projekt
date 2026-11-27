@@ -1,7 +1,10 @@
 (() => {
   const expandedOverviews = new WeakMap();
+  let activeOverview = null;
 
   function expandOverview(details) {
+    if (expandedOverviews.has(details)) return;
+
     const cardColumn = details.closest('.col');
     const row = cardColumn?.parentElement;
 
@@ -39,9 +42,16 @@
     details.classList.add('movie-overview');
     details.addEventListener('toggle', () => {
       if (details.open) {
+        if (activeOverview && activeOverview !== details) {
+          activeOverview.open = false;
+          collapseOverview(activeOverview);
+        }
+
+        activeOverview = details;
         expandOverview(details);
       } else {
         collapseOverview(details);
+        if (activeOverview === details) activeOverview = null;
       }
     });
   });
