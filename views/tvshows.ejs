@@ -46,6 +46,8 @@
                   <p class="mt-1 mb-0"><%= tvShow.overview %></p>
                 </details>
               <% } %>
+
+              <%- include('partials/watchlist-button', { item: tvShow, type: 'tv', title: tvShow.name, year: tvShow.first_air_date?.slice(0, 4) }) %>
             </div>
           </article>
         </div>

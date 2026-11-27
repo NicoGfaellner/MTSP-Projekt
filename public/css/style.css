@@ -348,6 +348,25 @@ main{
     color: var(--muted-color);
     font-size: .8rem;
 }
+.watchlist-metadata{
+    display: block;
+}
+.watchlist-button{
+    margin-top: .65rem;
+    color: #ffffff;
+    background-color: var(--button-bg);
+    border: 1px solid var(--button-bg);
+    border-radius: 2px;
+}
+.watchlist-button:hover,
+.watchlist-button[aria-pressed="true"]{
+    color: #ffffff;
+    background-color: var(--button-hover);
+    border-color: var(--button-hover);
+}
+.watchlist-remove-button{
+    display: block;
+}
 .service-tag{
     display: inline-flex;
     flex-wrap: wrap;

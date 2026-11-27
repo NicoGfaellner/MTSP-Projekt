@@ -33,6 +33,8 @@
           <h2 class="h5 mt-4">Handlung</h2>
           <p><%= movie.overview || 'Keine Inhaltsangabe verfügbar.' %></p>
 
+          <%- include('partials/watchlist-button', { item: movie, type: 'movie', title: movie.title, year: movie.release_date?.slice(0, 4) }) %>
+
           <% if (movie.streamingProviders?.length) { %>
             <h2 class="h5 mt-4">Anbieter in Österreich</h2>
             <div class="service-tag ms-0">
