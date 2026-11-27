@@ -395,6 +395,35 @@ main{
     font-size: .85rem;
 }
 
+.movie-overview-row{
+    position: relative;
+    z-index: 5;
+}
+.row > .movie-overview-row{
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+}
+.movie-overview-row > .movie-overview{
+    display: block;
+    width: 100%;
+    margin: 0 !important;
+    padding: 1rem 1.25rem;
+    color: var(--text-color);
+    background-color: var(--surface-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 2px;
+}
+.movie-overview-row > .movie-overview > summary{
+    color: #ededed;
+    cursor: pointer;
+    font-weight: 600;
+}
+.movie-overview-row > .movie-overview > p{
+    max-width: none;
+    line-height: 1.6;
+}
+
 .site-footer{
     color: var(--muted-color);
     background-color: var(--header-bg);
