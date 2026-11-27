@@ -351,6 +351,16 @@ main{
 .watchlist-metadata{
     display: block;
 }
+.movie-status-select{
+    margin-top: .55rem;
+    color: #ededed;
+    background-color: var(--surface-bg);
+    border-color: #666666;
+}
+.movie-status-select option{
+    color: #ededed;
+    background-color: var(--surface-bg);
+}
 .watchlist-button{
     margin-top: .65rem;
     color: #ffffff;
@@ -487,6 +497,31 @@ main{
     color: #ffffff;
     background-color: #8a4242;
     border-color: #a95858;
+}
+.status-directory-controls{
+    max-width: 360px;
+    margin-bottom: 2rem;
+}
+.status-directory-controls label{
+    display: block;
+    margin-bottom: .4rem;
+    color: #ededed;
+    font-weight: 600;
+}
+.status-directory-filter{
+    color: #ededed;
+    background-color: var(--surface-bg);
+    border-color: #666666;
+}
+.status-directory-filter option{
+    color: #ededed;
+    background-color: var(--surface-bg);
+}
+.status-directory-group + .status-directory-group{
+    margin-top: 2.5rem;
+}
+.status-directory-group > h2{
+    margin-bottom: 1rem;
 }
 .service-tag{
     display: inline-flex;

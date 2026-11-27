@@ -38,6 +38,8 @@
           <h2 class="h5 mt-4">Handlung</h2>
           <p><%= tvShow.overview || 'Keine Inhaltsangabe verfügbar.' %></p>
 
+          <%- include('partials/watchlist-button', { item: tvShow, type: 'tv', title: tvShow.name, year: tvShow.first_air_date?.slice(0, 4) }) %>
+
           <% if (tvShow.streamingProviders?.length) { %>
             <h2 class="h5 mt-4">Anbieter in Österreich</h2>
             <div class="service-tag ms-0">

@@ -8,3 +8,20 @@
         data-poster-path="<%= item.poster_path || '' %>">
   Zur Watchlist hinzufügen
 </button>
+<label class="visually-hidden" for="status-<%= type %>-<%= item.id %>">Status für <%= title %></label>
+<select id="status-<%= type %>-<%= item.id %>"
+        class="form-select form-select-sm movie-status-select position-relative z-2"
+        data-status-select
+        data-id="<%= item.id %>"
+        data-type="<%= type %>"
+        data-title="<%= title %>"
+        data-year="<%= year || '' %>"
+        data-poster-path="<%= item.poster_path || '' %>"
+        aria-label="Status für <%= title %>">
+  <option value="">Status auswählen</option>
+  <option value="watching">Schaue gerade</option>
+  <option value="completed">Fertig geschaut</option>
+  <option value="want">Will schauen</option>
+  <option value="dropped">Abgebrochen</option>
+  <option value="paused">Pausiert</option>
+</select>

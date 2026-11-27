@@ -1,0 +1,24 @@
+<section class="content-page container">
+  <div class="page-heading">
+    <h1>Mein Verzeichnis</h1>
+    <p>Deine Filme und Serien, geordnet nach deinem persönlichen Status.</p>
+  </div>
+
+  <div class="status-directory-controls">
+    <label for="statusDirectoryFilter">Status anzeigen</label>
+    <select id="statusDirectoryFilter" class="form-select status-directory-filter" data-status-filter>
+      <option value="">Alle Status</option>
+      <option value="watching">Schaue gerade</option>
+      <option value="completed">Fertig geschaut</option>
+      <option value="want">Will schauen</option>
+      <option value="dropped">Abgebrochen</option>
+      <option value="paused">Pausiert</option>
+    </select>
+  </div>
+
+  <div data-status-directory></div>
+  <p class="visually-hidden" data-watchlist-announcement aria-live="polite"></p>
+  <noscript>
+    <p class="content-panel">Zum Verwalten des Verzeichnisses muss JavaScript aktiviert sein.</p>
+  </noscript>
+</section>

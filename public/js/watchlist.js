@@ -2,7 +2,9 @@
   const storageKey = 'watchdeck.watchlists.v2';
   const legacyStorageKey = 'watchdeck.watchlist.v1';
   const watchlistContainer = document.querySelector('[data-watchlist-results]');
+  const directoryContainer = document.querySelector('[data-status-directory]');
   const listSelect = document.querySelector('[data-watchlist-select]');
+  const statusFilter = document.querySelector('[data-status-filter]');
   const createForm = document.querySelector('[data-watchlist-create]');
   const renameForm = document.querySelector('[data-watchlist-rename]');
   const renameInput = renameForm?.elements.namedItem('name');
@@ -16,6 +18,13 @@
   const pickerCloseButton = document.querySelector('[data-watchlist-dialog-close]');
   let announcement = document.querySelector('[data-watchlist-announcement]');
   let pendingItem = null;
+  const statusOptions = [
+    { value: 'watching', label: 'Schaue gerade' },
+    { value: 'completed', label: 'Fertig geschaut' },
+    { value: 'want', label: 'Will schauen' },
+    { value: 'dropped', label: 'Abgebrochen' },
+    { value: 'paused', label: 'Pausiert' }
+  ];
 
   if (!announcement) {
     announcement = document.createElement('p');
@@ -52,6 +61,12 @@
     };
   }
 
+  function normalizeStatusEntry(entry) {
+    if (!entry || !statusOptions.some(option => option.value === entry.status)) return null;
+    const item = normalizeItem(entry);
+    return item ? { ...item, status: entry.status } : null;
+  }
+
   function normalizeList(list) {
     if (!list || typeof list !== 'object') return null;
 
@@ -82,7 +97,7 @@
       name: 'Meine Watchlist',
       items
     };
-    return { lists: [list], activeListId: list.id };
+    return { lists: [list], activeListId: list.id, statusEntries: [] };
   }
 
   function normalizeState(value) {
@@ -96,12 +111,20 @@
       seenIds.add(list.id);
     }
 
-    if (lists.length === 0) return createDefaultState();
+    const statusByKey = new Map();
+    const statusEntries = Array.isArray(value?.statusEntries)
+      ? value.statusEntries.map(normalizeStatusEntry).filter(Boolean)
+      : [];
+    statusEntries.forEach(item => statusByKey.set(itemKey(item), item));
+
+    if (lists.length === 0) {
+      return { ...createDefaultState(), statusEntries: [...statusByKey.values()] };
+    }
 
     const activeListId = lists.some(list => list.id === value?.activeListId)
       ? value.activeListId
       : lists[0].id;
-    return { lists, activeListId };
+    return { lists, activeListId, statusEntries: [...statusByKey.values()] };
   }
 
   function loadState() {
@@ -135,7 +158,8 @@
   function copyState() {
     return {
       activeListId: state.activeListId,
-      lists: state.lists.map(list => ({ ...list, items: [...list.items] }))
+      lists: state.lists.map(list => ({ ...list, items: [...list.items] })),
+      statusEntries: state.statusEntries.map(item => ({ ...item }))
     };
   }
 
@@ -167,6 +191,41 @@
         ? `Bereits gespeichert in: ${savedIn.map(list => list.name).join(', ')}. Klicken zum Auswählen.`
         : 'Klicken, um eine Watchlist auszuwählen.';
     });
+  }
+
+  function updateStatusControls() {
+    const statuses = new Map(state.statusEntries.map(item => [itemKey(item), item.status]));
+    document.querySelectorAll('[data-status-select]').forEach(select => {
+      select.value = statuses.get(`${select.dataset.type}:${select.dataset.id}`) || '';
+    });
+  }
+
+  function createStatusSelect(item) {
+    const select = document.createElement('select');
+    select.className = 'form-select form-select-sm movie-status-select';
+    select.dataset.statusSelect = '';
+    select.dataset.id = item.id;
+    select.dataset.type = item.type;
+    select.dataset.title = item.title;
+    select.dataset.year = item.year || '';
+    select.dataset.posterPath = item.posterPath || '';
+    select.setAttribute('aria-label', `Status für ${item.title}`);
+
+    const emptyOption = document.createElement('option');
+    emptyOption.value = '';
+    emptyOption.textContent = 'Status auswählen';
+    select.appendChild(emptyOption);
+
+    statusOptions.forEach(status => {
+      const option = document.createElement('option');
+      option.value = status.value;
+      option.textContent = status.label;
+      select.appendChild(option);
+    });
+
+    const saved = state.statusEntries.find(entry => itemKey(entry) === itemKey(item));
+    select.value = saved?.status || item.status || '';
+    return select;
   }
 
   function renderPickerOptions() {
@@ -264,6 +323,7 @@
     removeButton.textContent = 'Aus dieser Watchlist entfernen';
     removeButton.setAttribute('aria-label', `${item.title} aus der Watchlist entfernen`);
     info.appendChild(removeButton);
+    info.appendChild(createStatusSelect(item));
 
     card.appendChild(info);
     column.appendChild(card);
@@ -323,10 +383,124 @@
     watchlistContainer.replaceChildren(row);
   }
 
+  function createDirectoryCard(item) {
+    const column = document.createElement('div');
+    column.className = 'col';
+
+    const card = document.createElement('article');
+    card.className = 'movie-card';
+
+    if (item.posterPath) {
+      const posterLink = document.createElement('a');
+      posterLink.href = detailUrl(item);
+      posterLink.setAttribute('aria-label', `Details zu ${item.title} öffnen`);
+
+      const poster = document.createElement('img');
+      poster.className = 'd-block w-100 rounded';
+      poster.src = `https://image.tmdb.org/t/p/w500${item.posterPath}`;
+      poster.alt = `Poster zu ${item.title}`;
+      poster.loading = 'lazy';
+      poster.style.aspectRatio = '2 / 3';
+      poster.style.objectFit = 'cover';
+      posterLink.appendChild(poster);
+      card.appendChild(posterLink);
+    }
+
+    const info = document.createElement('div');
+    info.className = 'movie-info text-break';
+
+    const heading = document.createElement('h2');
+    heading.className = 'h6 mb-1';
+    const titleLink = document.createElement('a');
+    titleLink.className = 'watchlist-title-link';
+    titleLink.href = detailUrl(item);
+    titleLink.textContent = item.title;
+    heading.appendChild(titleLink);
+    info.appendChild(heading);
+
+    const metadata = document.createElement('span');
+    metadata.className = 'watchlist-metadata';
+    metadata.textContent = `${item.year || 'Jahr offen'} · ${item.type === 'tv' ? 'Serie' : 'Film'}`;
+    info.appendChild(metadata);
+    info.appendChild(createStatusSelect(item));
+
+    card.appendChild(info);
+    column.appendChild(card);
+    return column;
+  }
+
+  function renderStatusDirectory() {
+    if (!directoryContainer) return;
+
+    directoryContainer.replaceChildren();
+    const selectedStatus = statusFilter?.value || '';
+    const matchingEntries = state.statusEntries.filter(item =>
+      !selectedStatus || item.status === selectedStatus
+    );
+
+    if (matchingEntries.length === 0) {
+      const emptyState = document.createElement('div');
+      emptyState.className = 'content-panel';
+      const message = document.createElement('p');
+      if (selectedStatus) {
+        const label = statusOptions.find(status => status.value === selectedStatus)?.label;
+        message.textContent = `Im Status „${label}“ gibt es noch keine Titel.`;
+      } else {
+        message.textContent = 'Dein Verzeichnis ist noch leer. Wähle bei einem Film oder einer Serie einen Status aus.';
+      }
+      emptyState.appendChild(message);
+
+      if (!selectedStatus) {
+        const links = document.createElement('p');
+        links.className = 'mb-0';
+        const moviesLink = document.createElement('a');
+        moviesLink.href = '/movies';
+        moviesLink.textContent = 'Filme ansehen';
+        links.appendChild(moviesLink);
+        links.append(' · ');
+        const seriesLink = document.createElement('a');
+        seriesLink.href = '/tvshows';
+        seriesLink.textContent = 'Serien ansehen';
+        links.appendChild(seriesLink);
+        emptyState.appendChild(links);
+      }
+
+      directoryContainer.appendChild(emptyState);
+      return;
+    }
+
+    const groups = statusOptions
+      .map(status => ({
+        ...status,
+        items: matchingEntries
+          .filter(item => item.status === status.value)
+          .sort((a, b) => a.title.localeCompare(b.title, 'de'))
+      }))
+      .filter(group => group.items.length > 0);
+
+    groups.forEach(group => {
+      const section = document.createElement('section');
+      section.className = 'status-directory-group';
+
+      const heading = document.createElement('h2');
+      heading.className = 'section-title h4';
+      heading.textContent = `${group.label} (${group.items.length})`;
+      section.appendChild(heading);
+
+      const row = document.createElement('div');
+      row.className = 'row row-cols-2 row-cols-md-3 row-cols-lg-5 g-2 g-md-4';
+      group.items.forEach(item => row.appendChild(createDirectoryCard(item)));
+      section.appendChild(row);
+      directoryContainer.appendChild(section);
+    });
+  }
+
   function render() {
     renderListControls();
     updateAddButtons();
+    updateStatusControls();
     renderWatchlist();
+    renderStatusDirectory();
     if (pickerDialog?.open && pendingItem) {
       renderPickerOptions();
       updatePickerState();
@@ -415,6 +589,45 @@
         ? 'Watchlist gelöscht. Eine neue leere Meine Watchlist wurde angelegt.'
         : `Watchlist „${list.name}“ gelöscht.`;
     }
+  });
+
+  statusFilter?.addEventListener('change', renderStatusDirectory);
+
+  document.addEventListener('change', event => {
+    const select = event.target instanceof HTMLSelectElement &&
+      event.target.matches('[data-status-select]')
+      ? event.target
+      : null;
+    if (!select) return;
+
+    const item = normalizeItem({
+      id: select.dataset.id,
+      type: select.dataset.type,
+      title: select.dataset.title,
+      year: select.dataset.year,
+      posterPath: select.dataset.posterPath
+    });
+    if (!item) return;
+
+    const nextState = copyState();
+    const existingIndex = nextState.statusEntries.findIndex(entry => itemKey(entry) === itemKey(item));
+
+    if (!select.value) {
+      if (existingIndex < 0) return;
+      nextState.statusEntries.splice(existingIndex, 1);
+      announcement.textContent = `Status von „${item.title}“ entfernt.`;
+    } else {
+      if (!statusOptions.some(status => status.value === select.value)) return;
+      const entry = { ...item, status: select.value };
+      if (existingIndex >= 0) nextState.statusEntries[existingIndex] = entry;
+      else nextState.statusEntries.push(entry);
+
+      const statusLabel = statusOptions.find(status => status.value === select.value).label;
+      announcement.textContent = `„${item.title}“: ${statusLabel}.`;
+    }
+
+    if (saveState(nextState)) render();
+    else updateStatusControls();
   });
 
   pickerSelect?.addEventListener('change', updatePickerState);
