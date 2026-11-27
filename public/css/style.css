@@ -384,6 +384,12 @@ main{
     color: #ededed;
     font-weight: 600;
 }
+.watchlist-form-label{
+    display: block;
+    margin-bottom: .4rem;
+    color: #ededed;
+    font-weight: 600;
+}
 .watchlist-form .form-control,
 .watchlist-form .form-select{
     color: #ededed;
@@ -403,8 +409,9 @@ main{
 }
 .watchlist-selected-controls{
     display: grid;
-    grid-template-columns: minmax(180px, 1fr) minmax(240px, 2fr);
+    grid-template-columns: minmax(180px, 1fr) minmax(240px, 2fr) auto;
     gap: 1rem;
+    align-items: end;
     margin-top: 1.25rem;
 }
 .watchlist-form-row .watchlist-button{
@@ -469,6 +476,17 @@ main{
     color: #ffffff;
     background-color: var(--button-bg);
     border-color: var(--button-bg);
+}
+.watchlist-delete-button{
+    color: #ffffff;
+    background-color: #713939;
+    border: 1px solid #8e4b4b;
+    border-radius: 2px;
+}
+.watchlist-delete-button:hover{
+    color: #ffffff;
+    background-color: #8a4242;
+    border-color: #a95858;
 }
 .service-tag{
     display: inline-flex;

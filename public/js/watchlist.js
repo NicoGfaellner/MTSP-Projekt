@@ -6,6 +6,7 @@
   const createForm = document.querySelector('[data-watchlist-create]');
   const renameForm = document.querySelector('[data-watchlist-rename]');
   const renameInput = renameForm?.elements.namedItem('name');
+  const deleteButton = document.querySelector('[data-watchlist-delete]');
   const pickerDialog = document.querySelector('[data-watchlist-dialog]');
   const pickerItemLabel = document.querySelector('[data-watchlist-dialog-item]');
   const pickerSelect = document.querySelector('[data-watchlist-target]');
@@ -77,7 +78,7 @@
 
   function createDefaultState(items = []) {
     const list = {
-      id: 'watchlist-main',
+      id: createListId(),
       name: 'Meine Watchlist',
       items
     };
@@ -385,6 +386,34 @@
     if (saveState(nextState)) {
       render();
       announcement.textContent = `Watchlist in „${name}“ umbenannt.`;
+    }
+  });
+
+  deleteButton?.addEventListener('click', () => {
+    const list = activeList();
+    const isLastList = state.lists.length === 1;
+    const warning = isLastList
+      ? `„${list.name}“ und alle ${list.items.length} Einträge löschen? Danach wird eine neue leere „Meine Watchlist“ angelegt.`
+      : `„${list.name}“ und alle ${list.items.length} Einträge löschen?`;
+
+    if (!window.confirm(warning)) return;
+
+    const nextState = copyState();
+    nextState.lists = nextState.lists.filter(item => item.id !== list.id);
+
+    if (nextState.lists.length === 0) {
+      const freshList = { id: createListId(), name: 'Meine Watchlist', items: [] };
+      nextState.lists.push(freshList);
+      nextState.activeListId = freshList.id;
+    } else {
+      nextState.activeListId = nextState.lists[0].id;
+    }
+
+    if (saveState(nextState)) {
+      render();
+      announcement.textContent = isLastList
+        ? 'Watchlist gelöscht. Eine neue leere Meine Watchlist wurde angelegt.'
+        : `Watchlist „${list.name}“ gelöscht.`;
     }
   });
 
