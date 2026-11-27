@@ -9,7 +9,7 @@ const bullyHerbigRouter = require('./routes/bullyherbig');
 const asterixRouter = require('./routes/asterix');
 const movieIds = require('./data/movieIDs');
 const tvShowIds = require('./data/tvshowIDs');
-const { getProviderUrl } = require('./tmdbProviders');
+const { getProviderUrl, fetchTitleWithProviders } = require('./tmdbProviders');
 require('dotenv').config({ path: './api.env' });
 
 //neue Instanz von express erstellen
@@ -142,6 +142,50 @@ server.get('/test-api', (req, res) => {
 server.get('/', renderHome);
 
 server.get('/index', renderHome);
+
+server.get('/search', async (req, res) => {
+  const query = String(req.query.q ?? '').trim();
+
+  if (!query) return res.redirect('/');
+
+  const apiKey = process.env.TMDB_API_KEY;
+  if (!apiKey) return res.status(500).send('TMDB_API_KEY fehlt.');
+
+  try {
+    const url = new URL('https://api.themoviedb.org/3/search/multi');
+    url.searchParams.set('api_key', apiKey);
+    url.searchParams.set('query', query);
+    url.searchParams.set('language', 'de-DE');
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('TMDB-Suche fehlgeschlagen');
+
+    const { results = [] } = await response.json();
+    const matches = results
+      .filter(item => ['movie', 'tv'].includes(item.media_type))
+      .slice(0, 10);
+
+    const loaded = await Promise.allSettled(
+      matches.map(item =>
+        fetchTitleWithProviders(item.media_type, item.id, apiKey)
+      )
+    );
+
+    const titles = loaded
+      .filter(result => result.status === 'fulfilled')
+      .map(result => result.value);
+
+    res.render('search', {
+      layout: './layouts/main',
+      query,
+      results: titles
+    });
+  } catch (error) {
+    console.error('TMDB-Suche fehlgeschlagen:', error);
+    res.status(502).send('Die Suche ist gerade nicht verfügbar.');
+  }
+});
+
 
 server.get('/about', (req, res) => {
   res.render("about", {layout: "./layouts/main"});
